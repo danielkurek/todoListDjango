@@ -1,0 +1,18 @@
+<ul>
+    {% for task in tasks %}
+    <li class="task task_item {%if task.completed %}completed {%endif%}">
+        <a href="{% url 'detail' task.id %}">
+        <span class="task task_title {%if task.completed %}completed {%endif%}">{{ task.task_title }}</span>
+        <span class="task due_date">{{ task.due_date | date:"d.m.Y"}}</span>
+        </a>
+        &nbsp;
+        <a href="{% url 'task-complete' task.id %}{% if task.completed %}?complete=false{% endif %}">
+        {% if task.completed %}
+            Undone
+        {% else %}
+            Done
+        {% endif %}
+        </a>
+    </li>
+    {% endfor %}
+</ul>
