@@ -8,6 +8,9 @@ class ToDoTask(models.Model):
     task_description = models.TextField(blank=True)
     completed = models.BooleanField(default=False, blank=True)
 
+    def __str__(self):
+        return self.task_title
+
 class Tag(models.Model):
     tag_name = models.CharField(max_length=50)
     tag_color = models.CharField(max_length=9) # color as #AARRGGBB
