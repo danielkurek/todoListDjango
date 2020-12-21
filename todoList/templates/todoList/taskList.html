@@ -1,18 +1,19 @@
-<ul>
+{% extends 'todoList/main.html' %}
+{% block task_list %}
+<ul class="task_list">
     {% for task in tasks %}
-    <li class="task task_item {%if task.completed %}completed {%endif%}">
+    <li class="task {%if task.completed %}completed{%endif%}">
+        <a class="complete" 
+            href="{% url 'task-complete' task.id %}{% if task.completed %}?complete=false{% endif %}"
+        >{% if task.completed %}Undone{% else %}Done{% endif %}</a>
+        {% spaceless %}
         <a href="{% url 'detail' task.id %}">
-        <span class="task task_title {%if task.completed %}completed {%endif%}">{{ task.task_title }}</span>
-        <span class="task due_date">{{ task.due_date | date:"d.m.Y"}}</span>
-        </a>
+        <span class="task_title {%if task.completed %}completed{%endif%}">{{ task.task_title }}</span>
         &nbsp;
-        <a href="{% url 'task-complete' task.id %}{% if task.completed %}?complete=false{% endif %}">
-        {% if task.completed %}
-            Undone
-        {% else %}
-            Done
-        {% endif %}
+        <span class="due_date">{{ task.due_date | date:"d.m.Y"}}</span>
         </a>
+        {% endspaceless %}
     </li>
     {% endfor %}
 </ul>
+{% endblock task_list %}
