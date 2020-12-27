@@ -1,11 +1,15 @@
 {% extends 'todoList/main.html' %}
-{% block task_list %}
+{% load static %}
+{% block content %}
 <ul class="task_list">
     {% for task in tasks %}
     <li class="task {%if task.completed %}completed{%endif%}">
+        {% spaceless %}
         <a class="complete" 
-            href="{% url 'task-complete' task.id %}{% if task.completed %}?complete=false{% endif %}"
-        >{% if task.completed %}Undone{% else %}Done{% endif %}</a>
+            href="{% url 'task-complete' task.id %}{% if task.completed %}?complete=false{% endif %}">
+            <span class="icon">&nbsp;</span>
+        </a>
+        {% endspaceless %}
         {% spaceless %}
         <a href="{% url 'detail' task.id %}">
         <span class="task_title {%if task.completed %}completed{%endif%}">{{ task.task_title }}</span>
@@ -16,4 +20,4 @@
     </li>
     {% endfor %}
 </ul>
-{% endblock task_list %}
+{% endblock content %}

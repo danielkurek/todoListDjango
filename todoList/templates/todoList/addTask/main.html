@@ -4,19 +4,15 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>{% block title-head %}ToDo List{% endblock title-head %}</title>
+        <title>ToDo List - Add</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="{% static 'todoList/css/style.css' %}">
     </head>
     <body>
-    <h1>{% block title %}ToDo List{% endblock title %}</h1>
-    <nav>
-    {% block menu %}
-        <a href="{% url 'add-task' %}">Add</a>
-    {% endblock menu %}
-    </nav>
-    {% block content %}
-    {% endblock content %}
+    <h1>Todo List</h1>
+    <a href="{% url 'index' %}">Home</a>
+    {% block add_form %}
+    {% endblock add_form %}
     </body>
 </html>

@@ -4,17 +4,72 @@ a{
 ul.task_list{
     list-style-type: none;
     margin: 0;
+    margin-top: 20px;
     padding: 0;
     max-width: 1000px;
 }
 ul li{
     overflow: visible;
+    border: 1px solid black;
+    border-radius: 10px;
+    padding: 10px 5px;
+    margin: 10px 5px;
+}
+ul li:nth-child(even){
+    background-color: #b7d0f0;
 }
 .task.completed{
-    color: grey;
+    background-color: #dacece;
+}
+.task.completed:nth-child(even){
+    background-color: #e0e0e0;
 }
 .task .complete{
-    width: 50px;
     color: blue;
     margin-right: 20px;
+}
+
+.task .complete span.icon{
+    display: inline-block;
+    width: 1.5em;
+    height: 1.5em;
+    background-image: url("../svg/circle.svg");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    transition: all ;
+}
+
+.task .complete span.icon:hover{
+    animation: iconCheckCircle 0.3s ease-in;
+    animation-fill-mode: forwards;
+    /* background-image: url("../svg/check-circle.svg"); */
+}
+
+.task.completed .complete span.icon{
+    background-image: url("../svg/check-circle.svg");
+}
+.task.completed .complete span.icon:hover{
+    animation: iconCircle 0.3s ease-in;
+    animation-fill-mode: forwards;
+    /* background-image: url("../svg/circle.svg"); */
+}
+
+@keyframes iconCircle {
+    100% { background-image: url("../svg/circle.svg"); }
+  }
+
+@keyframes iconCheckCircle {
+100% { background-image: url("../svg/check-circle.svg"); }
+}
+
+nav a{
+    text-decoration: none;
+    color: black;
+    padding: 10px 20px;
+    margin: 20px;
+    background-color: #85b4f1;
+}
+nav a:hover{
+    background-color: #b7d0f0;
 }

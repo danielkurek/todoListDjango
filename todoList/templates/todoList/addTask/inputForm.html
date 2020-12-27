@@ -1,0 +1,14 @@
+{% extends 'todoList/main.html' %}
+{% block title %}Add Task{% endblock title %}
+{% block menu %}
+<a href="{% url 'index' %}">Home</a>
+{% endblock menu %}
+{% block content %}
+<form action="/todo/add-task/" method="post">
+    {% csrf_token %}
+    <table>
+    {{ form.as_table }}
+    </table>
+    <input type="submit" value="Submit">
+</form>
+{% endblock content %}

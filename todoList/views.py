@@ -1,5 +1,5 @@
 from django.http.response import HttpResponseBadRequest, HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.http import HttpResponse
 
 from .models import ToDoTask
@@ -7,7 +7,7 @@ from .forms import TaskForm
 
 # Create your views here.
 def index(request):
-    tasks = ToDoTask.objects.order_by('-create_date')[:5]
+    tasks = ToDoTask.objects.order_by('completed','-create_date')[:5]
     return render(request, 'todoList/taskList.html', {'tasks':tasks})
 
 def detail(request, task_id):
@@ -24,7 +24,8 @@ def complete(request, task_id):
     task = ToDoTask.objects.get(id=task_id)
     task.completed = complete
     task.save()
-    return HttpResponse("Task completed" if complete else "Task uncompleted")
+    # return HttpResponse("Task completed" if complete else "Task uncompleted")
+    return redirect("index")
         
 
 def added(request):
@@ -35,7 +36,7 @@ def input(request):
         form = TaskForm(request.POST)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect("/todo/added/")
+            return redirect("add-task")
     else:
         form = TaskForm()
-    return render(request, 'todoList/inputForm.html', {'form':form})
+    return render(request, 'todoList/addTask/inputForm.html', {'form':form})
