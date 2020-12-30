@@ -12,19 +12,24 @@ def index(request):
         showCompleted = True
     else:
         showCompleted = False
+    
+    filterQuery = request.GET.get("q", "")
        
     tasks = ToDoTask.objects
     if showCompleted == False:
         tasks = tasks.filter(completed=False)
+    if filterQuery != "":
+        tasks = tasks.filter(task_title__icontains=filterQuery)
     tasks = tasks.order_by('completed','-create_date')
     
-    paginator = Paginator(tasks, 15, orphans=5)
+    paginator = Paginator(tasks, 15, orphans=3)
     pageNumber = request.GET.get("page")
     page = paginator.get_page(pageNumber)
     return render(request, 'todoList/taskList.html', 
       {
         'showCompleted': showCompleted,
         'showCompletedParam': "&showCompleted=true" if showCompleted else "",
+        'queryParam': "&q=" + filterQuery if filterQuery != "" else "",
         'page': page
       })
 

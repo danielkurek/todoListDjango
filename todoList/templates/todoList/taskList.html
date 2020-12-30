@@ -1,7 +1,16 @@
 {% extends 'todoList/main.html' %}
 {% load static %}
 {% block content %}
-<a href="?showCompleted={% if showCompleted %}false{% else %}true{% endif %}">{% if showCompleted == False %}Show Completed{% else %}Hide Completed{% endif %}
+<a href="?showCompleted={% if showCompleted %}false{% else %}true{% endif %}{{queryParam}}">{% if showCompleted == False %}Show Completed{% else %}Hide Completed{% endif %}</a>
+<form action="" method="GET">
+    <label for="query">Filter: </label>
+    <input type="text" name="q" id="query" value="{{queryParam|cut:"&q="}}">
+    {% if showCompleted %}
+        <input type="hidden" name="showCompleted" value="true">
+    {% endif %}
+    <input type="submit">
+</form>
+<a href="?{{showCompletedParam|cut:"&"}}">Clear filter</a>
 <ul class="task_list">
     {% for task in page %}
     <li class="task {%if task.completed %}completed{%endif%}">
@@ -22,17 +31,19 @@
     {% endfor %}
 </ul>
 
+{% if page.paginator.num_pages > 1 %}
 <span class="page-links">
     {% if page.has_previous %}
-        <a href="?page=1{{showCompletedParam}}">&laquo; first</a>
-        <a href="?page={{page.previous_page_number}}{{showCompletedParam}}">previous</a>
+        <a href="?page=1{{showCompletedParam}}{{queryParam}}">&laquo; first</a>
+        <a href="?page={{page.previous_page_number}}{{showCompletedParam}}{{queryParam}}">previous</a>
     {% endif %}
     <span class="current">
         Page {{page.number}} of {{page.paginator.num_pages}}
     </span>
     {% if page.has_next %}
-        <a href="?page={{page.next_page_number}}{{showCompletedParam}}">next</a>
-        <a href="?page={{page.paginator.num_pages}}{{showCompletedParam}}">last &raquo;</a>
+        <a href="?page={{page.next_page_number}}{{showCompletedParam}}{{queryParam}}">next</a>
+        <a href="?page={{page.paginator.num_pages}}{{showCompletedParam}}{{queryParam}}">last &raquo;</a>
     {% endif %}
 </span>
+{% endif %}
 {% endblock content %}
