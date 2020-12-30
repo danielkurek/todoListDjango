@@ -5,13 +5,6 @@ from django.core.paginator import Paginator
 from .models import ToDoTask
 from .forms import TaskForm
 
-def __parseInt(val, defaultValue = None):
-    try:
-        val = int(val)
-    except ValueError:
-        return defaultValue
-    return val
-
 # Create your views here.
 def index(request):
     showCompleted = request.GET.get("showCompleted", "")
