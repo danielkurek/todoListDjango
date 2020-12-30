@@ -16,7 +16,9 @@
         <a href="{% url 'add-task' %}">Add</a>
     {% endblock menu %}
     </nav>
-    {% block content %}
-    {% endblock content %}
+    <div id="content">
+        {% block content %}
+        {% endblock content %}
+    </div>
     </body>
 </html>

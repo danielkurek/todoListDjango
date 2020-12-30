@@ -1,8 +1,9 @@
 {% extends 'todoList/main.html' %}
 {% load static %}
 {% block content %}
+<a href="?showCompleted={% if showCompleted %}false{% else %}true{% endif %}">{% if showCompleted == False %}Show Completed{% else %}Hide Completed{% endif %}
 <ul class="task_list">
-    {% for task in tasks %}
+    {% for task in page %}
     <li class="task {%if task.completed %}completed{%endif%}">
         {% spaceless %}
         <a class="complete" 
@@ -20,4 +21,18 @@
     </li>
     {% endfor %}
 </ul>
+
+<span class="page-links">
+    {% if page.has_previous %}
+        <a href="?page=1{{showCompletedParam}}">&laquo; first</a>
+        <a href="?page={{page.previous_page_number}}{{showCompletedParam}}">previous</a>
+    {% endif %}
+    <span class="current">
+        Page {{page.number}} of {{page.paginator.num_pages}}
+    </span>
+    {% if page.has_next %}
+        <a href="?page={{page.next_page_number}}{{showCompletedParam}}">next</a>
+        <a href="?page={{page.paginator.num_pages}}{{showCompletedParam}}">last &raquo;</a>
+    {% endif %}
+</span>
 {% endblock content %}
