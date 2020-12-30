@@ -1,0 +1,32 @@
+{% extends 'todoList/main.html' %}
+{% load humanize %}
+
+{% block title %}Task detail{% endblock title %}
+
+{% block menu %}
+<a href="{% url 'index' %}">Home</a>
+<a href="{% url 'add-task' %}">Add</a>
+{% endblock menu %}
+
+{% block content %}
+
+{% spaceless %}
+<div class="task_detail">
+    <h2>
+        <a class="complete" 
+            href="{% url 'task-complete' task.id %}{% if task.completed %}?complete=false{% endif %}">
+            <span class="icon {% if task.completed %}completed{% endif %}">&nbsp;</span>
+        </a>
+        <span id="task_title">{{task.task_title}}</span>
+    </h2>
+    {% endspaceless %}
+    <h3>
+        <span id="task_dueDate">Due: {{task.due_date|date:"G:i j.n.Y"}}({{task.due_date|naturaltime}})</span>
+    </h3>
+    <h3>
+        <span id="task_createDate">Created: {{task.create_date|date:"j.n.Y"}}</span>
+    </h3>
+    <label for="task_description">Task description: </label>
+    <div class="task_description" id="task_description">{{task.task_description}}</div>
+</div>
+{% endblock content %}

@@ -1,3 +1,18 @@
+nav a{
+    text-decoration: none;
+    color: black;
+    padding: 10px 20px;
+    margin: 20px;
+    background-color: #85b4f1;
+}
+nav a:hover{
+    background-color: #b7d0f0;
+}
+
+#content{
+    margin-top: 20px;
+}
+
 a{
     color: black;
 }
@@ -23,15 +38,16 @@ ul li:nth-child(even){
 .task.completed:nth-child(even){
     background-color: #e6e6e6;
 }
-.task .complete{
+.complete{
     color: blue;
     margin-right: 20px;
 }
 
-.task .complete span.icon{
+.complete span.icon{
     display: inline-block;
     width: 1.5em;
     height: 1.5em;
+    vertical-align: middle;
     background-image: url("../svg/circle.svg");
     background-repeat: no-repeat;
     background-position: center;
@@ -39,16 +55,16 @@ ul li:nth-child(even){
     transition: all ;
 }
 
-.task .complete span.icon:hover{
+.complete span.icon:hover{
     animation: iconCheckCircle 0.3s ease-in;
     animation-fill-mode: forwards;
     /* background-image: url("../svg/check-circle.svg"); */
 }
 
-.task.completed .complete span.icon{
+.complete span.icon.completed{
     background-image: url("../svg/check-circle.svg");
 }
-.task.completed .complete span.icon:hover{
+.complete span.icon.completed:hover{
     animation: iconCircle 0.3s ease-in;
     animation-fill-mode: forwards;
     /* background-image: url("../svg/circle.svg"); */
@@ -62,17 +78,9 @@ ul li:nth-child(even){
 100% { background-image: url("../svg/check-circle.svg"); }
 }
 
-nav a{
-    text-decoration: none;
-    color: black;
-    padding: 10px 20px;
-    margin: 20px;
-    background-color: #85b4f1;
+.task_detail h2{
+    font-weight: normal;
 }
-nav a:hover{
-    background-color: #b7d0f0;
-}
-
-#content{
-    margin-top: 20px;
+.task_detail h3{
+    font-weight: normal;
 }

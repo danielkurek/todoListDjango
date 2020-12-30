@@ -34,7 +34,8 @@ def index(request):
       })
 
 def detail(request, task_id):
-    return HttpResponse("You're looking at task %s." % task_id)
+    task = ToDoTask.objects.get(id=task_id)
+    return render(request, 'todoList/taskDetail.html', {'task': task})
 
 def complete(request, task_id):
     complete = True

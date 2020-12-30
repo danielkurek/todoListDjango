@@ -17,7 +17,7 @@
         {% spaceless %}
         <a class="complete" 
             href="{% url 'task-complete' task.id %}{% if task.completed %}?complete=false{% endif %}">
-            <span class="icon">&nbsp;</span>
+            <span class="icon {% if task.completed %}completed{% endif %}">&nbsp;</span>
         </a>
         {% endspaceless %}
         {% spaceless %}
