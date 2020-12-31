@@ -13,7 +13,7 @@
     </form>
     <a href="?{{showCompletedParam|cut:"&"}}">Clear filter</a>
 </div>
-<ul class="task_list content">
+<ul class="task-list content">
     {% for task in page %}
     <li class="task {%if task.completed %}completed{%endif%}">
         {% spaceless %}
@@ -23,10 +23,9 @@
         </a>
         {% endspaceless %}
         {% spaceless %}
-        <a href="{% url 'detail' task.id %}">
-        <span class="task_title {%if task.completed %}completed{%endif%}">{{ task.task_title }}</span>
-        &nbsp;
-        <span class="due_date">{{ task.due_date | date:"d.m.Y"}}</span>
+        <a class="task-link" href="{% url 'detail' task.id %}">
+            <span class="task-title {%if task.completed %}completed{%endif%}">{{ task.task_title }}</span>
+            <span class="due-date">{{ task.due_date | date:"d.m.Y"}}</span>
         </a>
         {% endspaceless %}
     </li>

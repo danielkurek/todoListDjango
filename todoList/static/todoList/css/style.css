@@ -94,7 +94,7 @@ a{
 /*
  * Task list style
  */
-ul.task_list{
+ul.task-list{
     list-style-type: none;
     margin: 0;
     margin-top: 10px;
@@ -102,33 +102,48 @@ ul.task_list{
 }
 
 /* Task list rows */
-ul.task_list li{
+ul.task-list li{
     overflow: visible;
-    border-bottom: 1px solid #bebebe;
+    border-top: 1px solid #bebebe;
     padding: 10px 5px;
 }
-ul.task_list li.completed{
+ul.task-list li.completed{
     border-color: #505050;
 }
-ul.task_list li:first-child{
-    border-top: 1px solid #bebebe;;
+ul.task-list li:last-child{
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
 }
-ul.task_list li a{
+ul.task-list li a{
     text-decoration: none;
+    vertical-align: middle;
 }
 .task.completed{
     background-color: #cfcfcf;
 }
 
 
-.task .task_title{
+/*
+ * Styling of each row
+ * - complete icon first
+ * - rest of the row is task
+ */
+.task{
+    display: flex;
+    align-items: center;
+}
+
+.task-link{
+    width: 100%;
+}
+
+.task .task-title{
     font-size: 1.1em;
 }
-/* Due date below title and aligned with title */
-.task .due_date{
+
+.task .due-date{
     display: block;
     font-size: 0.8em;
-    margin-left: calc(15px + 1.1em + 1em);
 }
 
 /*
@@ -139,8 +154,8 @@ ul.task_list li a{
 }
 .complete span.icon{
     display: inline-block;
-    width: 1.2em;
-    height: 1.2em;
+    width: 1.3em;
+    height: 1.3em;
     vertical-align: middle;
     background-image: url("../svg/circle.svg");
     background-repeat: no-repeat;
@@ -173,9 +188,9 @@ ul.task_list li a{
  * Task detail
  */
 
-.task_detail h2{
+.task-detail h2{
     font-weight: normal;
 }
-.task_detail h3{
+.task-detail h3{
     font-weight: normal;
 }
