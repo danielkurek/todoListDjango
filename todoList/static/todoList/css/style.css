@@ -1,66 +1,159 @@
+/* 
+ * Navigation
+ */
+nav{
+    margin: 5px;
+    padding: 10px;
+}
+nav ul{
+    list-style-type: none;
+    padding: 0;
+}
+nav ul li{
+    display: block;
+    margin: 5px 0px;
+}
 nav a{
     text-decoration: none;
-    color: black;
+    color: white;
+    background-color: #005dd6;
+    border-radius: 10px;
     padding: 10px 20px;
-    margin: 20px;
-    background-color: #85b4f1;
 }
 nav a:hover{
-    background-color: #b7d0f0;
+    background-color: #3f89eb;
+}
+
+/*
+ * Styling of main.html
+ */
+h1{
+    font-weight: normal;
+    display: none;
+}
+
+body{
+    display: grid;
+    grid-template-columns: auto;
+    grid-template-rows: auto;
+    grid-template-areas: 
+        "nav"
+        "header"
+        "content"
+        "footer";
+}
+
+nav a{
+    display: block;
+    text-align: center;
+}
+
+@media only screen and (min-width: 786px){
+    body{
+        grid-template-columns: 20% auto 20%;
+        grid-template-rows: auto;
+        grid-template-areas: 
+            "nav header ."
+            "nav content ."
+            "nav footer .";
+    }
+
+    nav a{
+        display: inline;
+        text-align: left;
+    }
+
+    nav ul li{
+        margin: 25px 0px;
+    }
+}
+.header{
+    grid-area: header;
+}
+
+.content{
+    grid-area: content;
+}
+
+.footer{
+    grid-area: footer;
+}
+
+nav{
+    grid-area: nav;
+}
+
+a{
+    color: black;
 }
 
 #content{
     margin-top: 20px;
 }
 
-a{
-    color: black;
-}
+/*
+ * Task list style
+ */
 ul.task_list{
     list-style-type: none;
     margin: 0;
+    margin-top: 10px;
     padding: 0;
-    max-width: 1000px;
-}
-ul li{
-    overflow: visible;
-    border: 1px solid black;
-    border-radius: 10px;
-    padding: 10px 5px;
-    margin: 10px 5px;
-}
-ul li:nth-child(even){
-    background-color: #b7d0f0;
-}
-.task.completed{
-    background-color: #c2c2c2;
-}
-.task.completed:nth-child(even){
-    background-color: #e6e6e6;
-}
-.complete{
-    color: blue;
-    margin-right: 20px;
 }
 
+/* Task list rows */
+ul.task_list li{
+    overflow: visible;
+    border-bottom: 1px solid #bebebe;
+    padding: 10px 5px;
+}
+ul.task_list li.completed{
+    border-color: #505050;
+}
+ul.task_list li:first-child{
+    border-top: 1px solid #bebebe;;
+}
+ul.task_list li a{
+    text-decoration: none;
+}
+.task.completed{
+    background-color: #cfcfcf;
+}
+
+
+.task .task_title{
+    font-size: 1.1em;
+}
+/* Due date below title and aligned with title */
+.task .due_date{
+    display: block;
+    font-size: 0.8em;
+    margin-left: calc(15px + 1.1em + 1em);
+}
+
+/*
+ * Complete icon styling
+ */
+.complete{
+    margin-right: 15px;
+}
 .complete span.icon{
     display: inline-block;
-    width: 1.5em;
-    height: 1.5em;
+    width: 1.2em;
+    height: 1.2em;
     vertical-align: middle;
     background-image: url("../svg/circle.svg");
     background-repeat: no-repeat;
     background-position: center;
     background-size: contain;
-    transition: all ;
 }
 
+/* Complete icon animation when hover */
 .complete span.icon:hover{
     animation: iconCheckCircle 0.3s ease-in;
     animation-fill-mode: forwards;
     /* background-image: url("../svg/check-circle.svg"); */
 }
-
 .complete span.icon.completed{
     background-image: url("../svg/check-circle.svg");
 }
@@ -69,14 +162,16 @@ ul li:nth-child(even){
     animation-fill-mode: forwards;
     /* background-image: url("../svg/circle.svg"); */
 }
-
 @keyframes iconCircle {
     100% { background-image: url("../svg/circle.svg"); }
   }
-
 @keyframes iconCheckCircle {
 100% { background-image: url("../svg/check-circle.svg"); }
 }
+
+/*
+ * Task detail
+ */
 
 .task_detail h2{
     font-weight: normal;

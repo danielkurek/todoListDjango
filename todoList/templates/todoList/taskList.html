@@ -1,17 +1,19 @@
 {% extends 'todoList/main.html' %}
 {% load static %}
 {% block content %}
-<a href="?showCompleted={% if showCompleted %}false{% else %}true{% endif %}{{queryParam}}">{% if showCompleted == False %}Show Completed{% else %}Hide Completed{% endif %}</a>
-<form action="" method="GET">
-    <label for="query">Filter: </label>
-    <input type="text" name="q" id="query" value="{{queryParam|cut:"&q="}}">
-    {% if showCompleted %}
-        <input type="hidden" name="showCompleted" value="true">
-    {% endif %}
-    <input type="submit">
-</form>
-<a href="?{{showCompletedParam|cut:"&"}}">Clear filter</a>
-<ul class="task_list">
+<div class="header">
+    <a href="?showCompleted={% if showCompleted %}false{% else %}true{% endif %}{{queryParam}}">{% if showCompleted == False %}Show Completed{% else %}Hide Completed{% endif %}</a>
+    <form action="" method="GET">
+        <label for="query">Filter: </label>
+        <input type="text" name="q" id="query" value="{{queryParam|cut:"&q="}}">
+        {% if showCompleted %}
+            <input type="hidden" name="showCompleted" value="true">
+        {% endif %}
+        <input type="submit">
+    </form>
+    <a href="?{{showCompletedParam|cut:"&"}}">Clear filter</a>
+</div>
+<ul class="task_list content">
     {% for task in page %}
     <li class="task {%if task.completed %}completed{%endif%}">
         {% spaceless %}
@@ -32,7 +34,7 @@
 </ul>
 
 {% if page.paginator.num_pages > 1 %}
-<span class="page-links">
+<span class="page-links footer">
     {% if page.has_previous %}
         <a href="?page=1{{showCompletedParam}}{{queryParam}}">&laquo; first</a>
         <a href="?page={{page.previous_page_number}}{{showCompletedParam}}{{queryParam}}">previous</a>

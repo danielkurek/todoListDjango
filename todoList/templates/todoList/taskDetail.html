@@ -4,8 +4,10 @@
 {% block title %}Task detail{% endblock title %}
 
 {% block menu %}
-<a href="{% url 'index' %}">Home</a>
-<a href="{% url 'add-task' %}">Add</a>
+<ul>
+    <li><a href="{% url 'index' %}">Home</a></li>
+    <li><a href="{% url 'add-task' %}">Add</a></li>
+</ul>
 {% endblock menu %}
 
 {% block content %}

@@ -13,7 +13,9 @@
     <h1>{% block title %}ToDo List{% endblock title %}</h1>
     <nav>
     {% block menu %}
-        <a href="{% url 'add-task' %}">Add</a>
+        <ul>
+            <li><a href="{% url 'add-task' %}">Add</a></li>
+        </ul>
     {% endblock menu %}
     </nav>
     <div id="content">
