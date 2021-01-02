@@ -1,7 +1,11 @@
 {% extends 'todoList/addTask/inputForm.html' %}
 {% block additionalFormInputs %}
-    {% for tag in Tags %}
-        <input type="checkbox" id="tag-{{tag.id}}" name="tag-{{tag.id}}" value="{{tag.id}}">
-        <label for="tag-{{tag.id}}">{{tag.tag_name}}</label><br>
+    {% for tag in tags %}
+        <input type="checkbox" id="tag-{{tag.id}}" name="tag" value="{{tag.id}}">
+        <label for="tag-{{tag.id}}">
+            <span style="background-color:{{tag.tag_color}}">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            {{tag.tag_name}}
+        </label>
     {% endfor %}
+    <br>
 {% endblock additionalFormInputs %}

@@ -60,7 +60,11 @@ def input(request):
     if request.method == "POST":
         form = TaskForm(request.POST)
         if form.is_valid():
-            form.save()
+            task = form.save()
+            tags = request.POST.getlist("tag", [])
+            for tagID in tags:
+                tag = Tag.objects.get(pk=tagID)
+                
             return redirect("add-task")
     else:
         initalDate = datetime.now() + timedelta(days=1)
@@ -68,9 +72,9 @@ def input(request):
             initial={
                 "due_date": initalDate.strftime("%Y-%m-%dT%H:00")
             })
-    tags = Tag.objects.all()
+    tags = Tag.objects.order_by("tag_name")
     return render(request, 'todoList/addTask.html', 
-        {'form':form, 'urlAction': resolve_url('add-task'), 'tag':tags})
+        {'form':form, 'urlAction': resolve_url('add-task'), 'tags':tags})
 
 def addTag(request):
     if request.method == "POST":
