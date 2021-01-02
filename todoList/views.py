@@ -1,6 +1,7 @@
 from django.shortcuts import redirect, render
 from django.http import HttpResponse
 from django.core.paginator import Paginator
+from datetime import datetime, timedelta
 
 from .models import ToDoTask
 from .forms import TaskForm
@@ -62,5 +63,9 @@ def input(request):
             form.save()
             return redirect("add-task")
     else:
-        form = TaskForm()
+        initalDate = datetime.now() + timedelta(days=1)
+        form = TaskForm(
+            initial={
+                "due_date": initalDate.strftime("%Y-%m-%dT%H:00")
+            })
     return render(request, 'todoList/addTask/inputForm.html', {'form':form})
