@@ -1,10 +1,10 @@
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, resolve_url
 from django.http import HttpResponse
 from django.core.paginator import Paginator
 from datetime import datetime, timedelta
 
-from .models import ToDoTask
-from .forms import TaskForm
+from .models import ToDoTask, Tag
+from .forms import TaskForm, CreateTagForm
 
 # Create your views here.
 def index(request):
@@ -60,7 +60,11 @@ def input(request):
     if request.method == "POST":
         form = TaskForm(request.POST)
         if form.is_valid():
-            form.save()
+            task = form.save()
+            tags = request.POST.getlist("tag", [])
+            for tagID in tags:
+                tag = Tag.objects.get(pk=tagID)
+                task.tags.add(tag)
             return redirect("add-task")
     else:
         initalDate = datetime.now() + timedelta(days=1)
@@ -68,4 +72,20 @@ def input(request):
             initial={
                 "due_date": initalDate.strftime("%Y-%m-%dT%H:00")
             })
-    return render(request, 'todoList/addTask/inputForm.html', {'form':form})
+    tags = Tag.objects.order_by("tag_name")
+    return render(request, 'todoList/addTask.html', 
+        {'form':form, 'urlAction': resolve_url('add-task'), 'tags':tags})
+
+def addTag(request):
+    if request.method == "POST":
+        form = CreateTagForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("add-tag")
+    else:
+        form = CreateTagForm(
+            initial={
+                "tag_color": "#FF0000"
+            })
+    return render(request, 'todoList/addTask/inputForm.html', 
+        {'form':form, 'urlAction': resolve_url('add-tag')})
