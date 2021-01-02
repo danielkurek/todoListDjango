@@ -1,0 +1,6 @@
+{% for tag in tags %}
+    <span class="tag">
+        <span class="tag-color" style="background-color:{{tag.tag_color}}">&nbsp;</span>
+        <span class="tag-name">{{tag.tag_name}}</span>
+    </span>
+{% endfor %}

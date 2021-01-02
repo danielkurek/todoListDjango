@@ -64,7 +64,7 @@ def input(request):
             tags = request.POST.getlist("tag", [])
             for tagID in tags:
                 tag = Tag.objects.get(pk=tagID)
-                
+                task.tags.add(tag)
             return redirect("add-task")
     else:
         initalDate = datetime.now() + timedelta(days=1)

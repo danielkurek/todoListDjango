@@ -12,8 +12,8 @@
 
 {% block content %}
 
-{% spaceless %}
 <div class="task-detail">
+    {% spaceless %}
     <h2>
         <a class="complete" 
             href="{% url 'task-complete' task.id %}{% if task.completed %}?complete=false{% endif %}">
@@ -22,6 +22,9 @@
         <span id="task-title">{{task.task_title}}</span>
     </h2>
     {% endspaceless %}
+    <div class="tags">
+        {% include 'todoList/tags.html' with tags=task.tags.all %}
+    </div>
     <h3>
         <span id="task-dueDate">Due: {{task.due_date|date:"G:i j.n.Y"}}({{task.due_date|naturaltime}})</span>
     </h3>

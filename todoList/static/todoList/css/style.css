@@ -1,3 +1,7 @@
+.bold{
+    font-weight: bold;
+}
+
 /* 
  * Navigation
  */
@@ -146,6 +150,7 @@ ul.task-list li a{
 .task .due-date{
     display: block;
     font-size: 0.8em;
+    margin-top: 5px;
 }
 
 /*
@@ -195,4 +200,27 @@ ul.task-list li a{
 }
 .task-detail h3{
     font-weight: normal;
+}
+
+/*
+ * Tags
+ */
+.tag-color{
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    border-radius: 100%;
+    margin-right: 3px;
+}
+.tag{
+    padding: 0.2em 0.5em;
+    border-radius: 10px;
+    border: 1px solid black;
+
+    margin: 0 5px;
+    font-size: 0.9em;
+}
+
+.tags{
+    margin: 10px 0;
 }
