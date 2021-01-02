@@ -25,7 +25,7 @@
         {% spaceless %}
         <a class="task-link" href="{% url 'detail' task.id %}">
             <span class="task-title {%if task.completed %}completed{%endif%}">{{ task.task_title }}</span>
-            <span class="due-date">{{ task.due_date | date:"d.m.Y"}}</span>
+            <span class="due-date">{{ task.due_date | date:"d.m.Y H:i"}}</span>
         </a>
         {% endspaceless %}
     </li>

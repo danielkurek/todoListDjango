@@ -104,7 +104,9 @@ ul.task-list{
 /* Task list rows */
 ul.task-list li{
     overflow: visible;
-    border-top: 1px solid #bebebe;
+    border-top-width: 1px;
+    border-top-style: solid;
+    border-color: #bebebe;
     padding: 10px 5px;
 }
 ul.task-list li.completed{
