@@ -15,23 +15,37 @@ def index(request):
         showCompleted = False
     
     filterQuery = request.GET.get("q", "")
+    filterTags = request.GET.getlist("tags")
        
     tasks = ToDoTask.objects
     if showCompleted == False:
         tasks = tasks.filter(completed=False)
     if filterQuery != "":
         tasks = tasks.filter(task_title__icontains=filterQuery)
+    if len(filterTags) > 0:
+        for i in range(len(filterTags)):
+            try:
+                filterTags[i] = int(filterTags[i])
+            except ValueError:
+                filterTags.remove(i)
+                continue
+            tasks = tasks.filter(tags__pk=filterTags[i])
     tasks = tasks.order_by('completed','-create_date')
     
     paginator = Paginator(tasks, 15, orphans=3)
     pageNumber = request.GET.get("page")
     page = paginator.get_page(pageNumber)
+    
+    tags = Tag.objects.order_by('tag_name')
+
     return render(request, 'todoList/taskList.html', 
       {
         'showCompleted': showCompleted,
         'showCompletedParam': "&showCompleted=true" if showCompleted else "",
         'queryParam': "&q=" + filterQuery if filterQuery != "" else "",
-        'page': page
+        'page': page,
+        'tags': tags,
+        'selectedTags': filterTags,
       })
 
 def detail(request, task_id):

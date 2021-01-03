@@ -6,6 +6,14 @@
     <form action="" method="GET">
         <label for="query">Filter: </label>
         <input type="text" name="q" id="query" value="{{queryParam|cut:"&q="}}">
+        <label for="tag-select">Tags: </label>
+        {% if tags.count > 0 %}
+            <select name="tags" id="tag-select" multiple>
+                {% for tag in tags %}
+                <option value="{{tag.id}}" {% if tag.id in selectedTags %}selected{% endif %}>{{tag.tag_name}}</option>
+                {% endfor %}
+            </select>
+        {% endif %}
         {% if showCompleted %}
             <input type="hidden" name="showCompleted" value="true">
         {% endif %}
