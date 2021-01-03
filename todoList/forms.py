@@ -15,9 +15,9 @@ class ColorInput(TextInput):
 class TaskForm(ModelForm):
     class Meta:
         model = ToDoTask
-        fields = ("task_title", "due_date","task_description")
+        fields = ("task_title", "due_date","task_description", "recurring")
         widgets = {
-            "due_date": DateTimeInput
+            "due_date": DateTimeInput,
         }
 class CreateTagForm(ModelForm):
     class Meta:

@@ -24,6 +24,7 @@ def index(request):
         tasks = tasks.filter(task_title__icontains=filterQuery)
     if len(filterTags) > 0:
         for i in range(len(filterTags)):
+            # remove non integer values
             try:
                 filterTags[i] = int(filterTags[i])
             except ValueError:
@@ -63,6 +64,27 @@ def complete(request, task_id):
     task = ToDoTask.objects.get(id=task_id)
     task.completed = complete
     task.save()
+    if task.recurring != ToDoTask.Recurring.ONCE and task.created_next == False:
+        newDate:datetime = task.due_date
+        if task.recurring == ToDoTask.Recurring.DAILY:
+            newDate += timedelta(days=1)
+        elif task.recurring == ToDoTask.Recurring.WEEKLY:
+            newDate += timedelta(weeks=1)
+        elif task.recurring == ToDoTask.Recurring.MONTHLY:
+            newDate += timedelta(weeks=4)
+        elif task.recurring == ToDoTask.Recurring.YEARLY:
+            newDate += timedelta(days=365)
+        newTask = ToDoTask(
+            task_title = task.task_title,
+            due_date = newDate,
+            task_description = task.task_description,
+            recurring = task.recurring
+            )
+        newTask.save()
+        for tag in task.tags.all():
+            newTask.tags.add(tag)
+        task.created_next = True
+        task.save()
     # return HttpResponse("Task completed" if complete else "Task uncompleted")
     return redirect("index")
         
