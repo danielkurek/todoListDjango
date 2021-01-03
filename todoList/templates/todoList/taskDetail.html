@@ -38,7 +38,7 @@
     <div class="task-description" id="task-description">
         {# if task description is not empty (or just whitespaces) #}
         {% if task.task_description and task.task_description.strip %}
-            {{task.task_description}}
+            {{task.task_description|linebreaksbr}}
         {% else %}
             (Empty)
         {% endif %}
