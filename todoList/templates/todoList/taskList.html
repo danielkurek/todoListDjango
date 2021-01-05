@@ -32,7 +32,7 @@
         </a>
         {% endspaceless %}
         {% spaceless %}
-        <a class="task-link" href="{% url 'detail' task.id %}">
+        <a class="task-link" href="{% url 'task-detail' task.id %}">
             <span class="task-title {%if task.completed %}completed{%endif%}">{{ task.task_title }}</span>
             {% include 'todoList/tags.html' with tags=task.tags.all|slice:":5" %}
             {% if task.tags.all.count > 5 %}<span class="more bold">...</span>{%endif%}
