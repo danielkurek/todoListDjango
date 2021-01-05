@@ -3,7 +3,8 @@
     <div class="tags">
         {% for tag in tags %}
             <span class="tag">
-                <input type="checkbox" id="tag-{{tag.id}}" name="tag" value="{{tag.id}}">
+                <input type="checkbox" id="tag-{{tag.id}}" name="tag" value="{{tag.id}}"
+                    {% if tag.id in taskTags %}checked{% endif %}>
                 <label for="tag-{{tag.id}}">
                     <span class="tag-color" style="background-color:{{tag.tag_color}}">&nbsp;</span>
                     {{tag.tag_name}}

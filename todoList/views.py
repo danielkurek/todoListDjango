@@ -1,4 +1,5 @@
-from django.shortcuts import redirect, render, resolve_url
+from django.shortcuts import redirect, render
+from django.urls import reverse
 from django.http import HttpResponse
 from django.core.paginator import Paginator
 from datetime import datetime, timedelta
@@ -97,10 +98,12 @@ def input(request):
         form = TaskForm(request.POST)
         if form.is_valid():
             task = form.save()
-            tags = request.POST.getlist("tag", [])
-            for tagID in tags:
+            tagIDs = request.POST.getlist("tag", [])
+            tags = []
+            for tagID in tagIDs:
                 tag = Tag.objects.get(pk=tagID)
-                task.tags.add(tag)
+                tags.append(tag)
+            task.tags.set(tags)
             return redirect("add-task")
     else:
         initalDate = datetime.now() + timedelta(days=1)
@@ -109,8 +112,8 @@ def input(request):
                 "due_date": initalDate.strftime("%Y-%m-%dT%H:00")
             })
     tags = Tag.objects.order_by("tag_name")
-    return render(request, 'todoList/addTask.html', 
-        {'form':form, 'urlAction': resolve_url('add-task'), 'tags':tags})
+    return render(request, 'todoList/forms/taskForm.html', 
+        {'form':form, 'urlAction': reverse('add-task'), 'tags':tags})
 
 def addTag(request):
     if request.method == "POST":
@@ -123,5 +126,39 @@ def addTag(request):
             initial={
                 "tag_color": "#FF0000"
             })
-    return render(request, 'todoList/addTask/inputForm.html', 
-        {'form':form, 'urlAction': resolve_url('add-tag')})
+    return render(request, 'todoList/forms/inputForm.html', 
+        {'form':form, 'urlAction': reverse('add-tag')})
+
+def editTask(request, task_id):
+    try:
+        task = ToDoTask.objects.get(pk=task_id)
+    except ToDoTask.DoesNotExist:
+        return HttpResponse("Task not found.")
+    if request.method == "POST":
+        form = TaskForm(request.POST, instance=task)
+        if form.is_valid():
+            task = form.save()
+            tagIDs = request.POST.getlist("tag", [])
+            tags = []
+            for tagID in tagIDs:
+                tag = Tag.objects.get(pk=tagID)
+                tags.append(tag)
+            task.tags.set(tags)
+            return redirect("task-detail", task_id=task_id)
+    else:
+        form = TaskForm(instance=task, 
+            initial={
+                "due_date": task.due_date.strftime("%Y-%m-%dT%H:%M")
+            }
+        )
+    tags = Tag.objects.order_by("tag_name")
+    task_tags = []
+    for tag in task.tags.all():
+        task_tags.append(tag.pk)
+    return render(request, 'todoList/forms/taskForm.html', 
+        {
+            'form': form, 
+            'urlAction': reverse('task-edit', args=[task_id]),
+            'tags': tags,
+            'taskTags': task_tags,
+        })

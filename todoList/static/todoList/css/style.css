@@ -192,6 +192,23 @@ ul.task-list li a{
 }
 
 /*
+ * Edit Icon
+ */
+.edit span.icon{
+    display: inline-block;
+    background-image: url("../svg/edit.svg");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    width: 0.8em;
+    height: 0.8em;
+}
+.edit{
+    margin-left: 15px;
+    vertical-align: middle;
+}
+
+/*
  * Task detail
  */
 
