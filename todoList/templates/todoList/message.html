@@ -1,0 +1,7 @@
+{% extends 'todoList/main.html' %}
+{% block content %}
+    <div class="banner">
+        <span>{{message_text}}</span>
+        {% if button_text %}<a class="button" href="{{url}}">{{button_text}}</a>{% endif %}
+    </div>
+{% endblock content %}

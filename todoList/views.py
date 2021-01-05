@@ -162,3 +162,26 @@ def editTask(request, task_id):
             'tags': tags,
             'taskTags': task_tags,
         })
+def deleted(request):
+    return render(request, 'todoList/message.html', 
+        {
+            'message_text': 'Task has been deleted',
+            'url': reverse('index'),
+            'button_text': 'Return Home',
+        })
+def deleteTask(request, task_id):
+    try:
+        task = ToDoTask.objects.get(pk=task_id)
+    except ToDoTask.DoesNotExist:
+        return HttpResponse("Task not found.")
+    if request.method == "POST":
+        if request.POST.get("delete", "false") == "true":
+            task.delete()
+            return redirect('task-deleted')
+    
+    return render(request, 'todoList/forms/delete.html', 
+        {
+            'item': task.task_title,
+            'keep_url': reverse('task-detail', args=[task_id]),
+            'delete_url': reverse('task-delete', args=[task_id])
+        })

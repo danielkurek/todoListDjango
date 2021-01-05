@@ -1,0 +1,14 @@
+{% extends 'todoList/main.html' %}
+{% block content %}
+<div class="banner">
+    <h1>Are you sure you want to delete {{item}}?</h1>
+    <div class="buttons">
+        <a class="button back" href="{{keep_url}}">No, go home</a>
+        <form action="{{delete_url}}" method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="delete" value="true">
+            <input class="button delete" type="submit" value="Delete">
+        </form>
+    </div>
+</div>
+{% endblock content %}

@@ -1,6 +1,18 @@
 .bold{
     font-weight: bold;
 }
+.button{
+    text-decoration: none;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 15px;
+    background-color: #005dd6;
+    color: white;
+    cursor: pointer;
+}
+.button:hover{
+    background-color: #3f89eb;
+}
 
 /* 
  * Navigation
@@ -194,7 +206,7 @@ ul.task-list li a{
 /*
  * Edit Icon
  */
-.edit span.icon{
+.task-edit span.icon{
     display: inline-block;
     background-image: url("../svg/edit.svg");
     background-repeat: no-repeat;
@@ -203,7 +215,24 @@ ul.task-list li a{
     width: 0.8em;
     height: 0.8em;
 }
-.edit{
+.task-edit{
+    margin-left: 15px;
+    vertical-align: middle;
+}
+
+/*
+ * Delete Icon
+ */
+ .task-delete span.icon{
+    display: inline-block;
+    background-image: url("../svg/delete.svg");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    width: 0.8em;
+    height: 0.8em;
+}
+.task-delete{
     margin-left: 15px;
     vertical-align: middle;
 }
@@ -240,4 +269,52 @@ ul.task-list li a{
 
 .tags{
     margin: 10px 0;
+}
+
+/*
+ * Delete screen
+ */
+.banner{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    right: 0;
+    background-color: white;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.banner + *{
+    font-size: 2.5em;
+    font-weight: normal;
+}
+.banner form{
+    display: inline-block;
+}
+.buttons .button{
+    text-decoration: none;
+    border: none;
+    padding: 20px 30px;
+    font-size: 2em;
+    border-radius: 10px;
+    box-shadow: 5px 5px;
+    margin: 20px;
+    cursor: pointer;
+}
+.buttons .button.back{
+    background-color: #23a523;
+    color: white;
+}
+.buttons .button.back:hover{
+    background-color: #28bb28;
+}
+.buttons .button.delete{
+    background-color: #a52323;
+    color: white;
+}
+.buttons .button.delete:hover{
+    background-color: #d42222;
 }

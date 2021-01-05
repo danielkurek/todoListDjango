@@ -20,7 +20,8 @@
             <span class="icon {% if task.completed %}completed{% endif %}">&nbsp;</span>
         </a>
         <span id="task-title">{{task.task_title}}</span>
-        <a class="edit" href="{% url 'task-edit' task.id %}"><span class="icon">&nbsp;</span></a> 
+        <a class="task-edit" href="{% url 'task-edit' task.id %}"><span class="icon">&nbsp;</span></a>
+        <a class="task-delete" href="{% url 'task-delete' task.id %}"><span class="icon">&nbsp;</span></a>
     </h2>
     {% endspaceless %}
     <div class="tags">
