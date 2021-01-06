@@ -20,21 +20,21 @@ body{
 /* 
  * Navigation
  */
+nav{
+    background-color: #e9ecf5;
+}
 nav ul{
     list-style-type: none;
     padding: 10px;
     display: flex;
     flex-direction: column;
     justify-content: start;
-    align-items: flex-start;
+    align-items: stretch;
+    align-content: flex-start;
 }
 nav ul li{
     display: block;
-    width: 100%;
-    /* border-bottom: 1px solid #a1a1a1;
-    border-top: 1px solid #a1a1a1; */
     border-radius: 10px;
-    background-color: #c4dffd;
     padding: 15px 10px;
     font-weight: bold;
 }
@@ -43,13 +43,11 @@ nav ul li.sub-menu{
     margin-left: 25px;
     font-size: 0.9rem;
     padding: 10px 5px;
-    width: calc(100% - 20px);
     font-weight: normal;
-    background-color: #fff;
+    background-color: initial;
 }
 nav a{
     display: inline-block;
-    width: 100%;
     text-decoration: none;
     color: black;
 }
@@ -98,6 +96,10 @@ body{
     line-height: 50px;
     margin-top: 22px;
     font-size: 30px;
+}
+
+body > .header{
+    margin-top: 30px;
 }
 
 @media only screen and (min-width: 786px){
