@@ -1,7 +1,13 @@
 ToDo list app in Django
 ## Features
-- Tags
-- Filter tasks
+- [x] Tags
+- [x] Filter tasks
+- [x] Repeating tasks
+- [ ] Remainder
+- [ ] Multiple lists
+- [ ] Multiple users
+- [ ] Sharing lists
+- [ ] JS frontend
 
 ## Instalation
 1) Clone this repository and go to repository folder
