@@ -19,13 +19,13 @@
             <li><a href="{% url 'index' %}"><i class="bi bi-list-task"></i> Tasks</a></li>
             <li class="sub-menu"><a href="{% url 'index' %}?date=today">Today</a></li>
             <li class="sub-menu"><a href="{% url 'index' %}?date=week">This week</a></li>
-            <li><a href="{% url 'add-tag' %}"><i class="bi bi-tags"></i> Tags</a></li>
+            <li><a href="{% url 'tag-list' %}"><i class="bi bi-tags"></i> Tags</a></li>
         </ul>
     {% endblock menu %}
     </nav>
     {% block floating-button %}
         <a class="floating add" 
-            href="{% block floating-btn-url %}{% url 'add-tag' %}{% endblock floating-btn-url %}"
+            href="{% block floating-btn-url %}{% url 'tag-add' %}{% endblock floating-btn-url %}"
             ><span>+</span></a>
     {% endblock floating-button %}
     <div class="header">

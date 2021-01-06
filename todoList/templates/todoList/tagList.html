@@ -1,0 +1,21 @@
+{% extends 'todoList/main.html' %}
+{% block title %}Tags{% endblock title %}
+{% block floating-btn-url %}{% url 'tag-add' %}{% endblock floating-btn-url %}
+{% block content %}
+    <ul class="tag-list list">
+        {% for tag in tags %}
+            <li>
+                <span class="tag">
+                    <span class="tag-color" style="background-color:{{tag.tag_color}}">&nbsp;</span>
+                    <span class="tag-name">{{tag.tag_name}}</span>
+                </span>
+                <a class="tag-edit" href="{% url 'tag-edit' tag.id %}">
+                    <i class="bi bi-pencil"></i>
+                </a>
+                <a class="tag-edit" href="{% url 'tag-delete' tag.id %}">
+                    <i class="bi bi-trash"></i>
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock content %}

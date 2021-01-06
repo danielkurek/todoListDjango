@@ -100,10 +100,6 @@ def complete(request, task_id):
         task.save()
     # return HttpResponse("Task completed" if complete else "Task uncompleted")
     return redirect("index")
-        
-
-def added(request):
-    return HttpResponse("Task has been added")
 
 def input(request):
     if request.method == "POST":
@@ -116,7 +112,7 @@ def input(request):
                 tag = Tag.objects.get(pk=tagID)
                 tags.append(tag)
             task.tags.set(tags)
-            return redirect("add-task")
+            return redirect("task-add")
     else:
         initalDate = datetime.now() + timedelta(days=1)
         form = TaskForm(
@@ -125,21 +121,7 @@ def input(request):
             })
     tags = Tag.objects.order_by("tag_name")
     return render(request, 'todoList/forms/taskForm.html', 
-        {'form':form, 'urlAction': reverse('add-task'), 'tags':tags})
-
-def addTag(request):
-    if request.method == "POST":
-        form = CreateTagForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect("add-tag")
-    else:
-        form = CreateTagForm(
-            initial={
-                "tag_color": "#FF0000"
-            })
-    return render(request, 'todoList/forms/inputForm.html', 
-        {'form':form, 'urlAction': reverse('add-tag')})
+        {'form':form, 'urlAction': reverse('task-add'), 'tags':tags})
 
 def editTask(request, task_id):
     try:
@@ -174,7 +156,7 @@ def editTask(request, task_id):
             'tags': tags,
             'taskTags': task_tags,
         })
-def deleted(request):
+def deletedTask(request):
     return render(request, 'todoList/message.html', 
         {
             'message_text': 'Task has been deleted',
@@ -196,4 +178,70 @@ def deleteTask(request, task_id):
             'item': task.task_title,
             'keep_url': reverse('task-detail', args=[task_id]),
             'delete_url': reverse('task-delete', args=[task_id])
+        })
+    
+def tagList(request):
+    tags = Tag.objects.all()
+    return render(request, 'todoList/tagList.html', {'tags':tags})
+
+def addTag(request):
+    if request.method == "POST":
+        form = CreateTagForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("tag-add")
+    else:
+        form = CreateTagForm(
+            initial={
+                "tag_color": "#FF0000"
+            })
+    return render(request, 'todoList/forms/inputForm.html', 
+        {
+            'form':form,
+            'urlAction': reverse('tag-add'),
+            'titleText': 'Add Tag',
+        })
+
+def editTag(request, tag_id):
+    try:
+        tag = Tag.objects.get(pk=tag_id)
+    except Tag.DoesNotExist:
+        return HttpResponse("Tag not found.")
+    if request.method == "POST":
+        print(tag.tag_name, tag.id, tag_id)
+        form = CreateTagForm(request.POST, instance=tag)
+        if form.is_valid():
+            form.save()
+            return redirect("tag-list")
+    else:
+        form = CreateTagForm(instance=tag)
+    return render(request, 'todoList/forms/inputForm.html', 
+        {
+            'form':form,
+            'urlAction': reverse('tag-edit', args=[tag_id]),
+            'titleText': 'Edit Tag',
+        })
+
+def deleteTag(request, tag_id):
+    try:
+        tag = Tag.objects.get(pk=tag_id)
+    except Tag.DoesNotExist:
+        return HttpResponse("Task not found.")
+    if request.method == "POST":
+        if request.POST.get("delete", "false") == "true":
+            tag.delete()
+            return redirect('tag-deleted')
+    
+    return render(request, 'todoList/forms/delete.html', 
+        {
+            'item': tag.tag_name,
+            'keep_url': reverse('tag-list'),
+            'delete_url': reverse('tag-delete', args=[tag_id])
+        })
+def deletedTag(request):
+    return render(request, 'todoList/message.html', 
+        {
+            'message_text': 'Tag has been deleted',
+            'url': reverse('tag-list'),
+            'button_text': 'Return Home',
         })
