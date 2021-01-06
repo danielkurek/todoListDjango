@@ -1,9 +1,19 @@
+/*
+ * General styles
+ */
+
 body{
     font-family: 'Roboto', sans-serif;
 }
+
+a{
+    color: black;
+}
+
 .bold{
     font-weight: bold;
 }
+
 .button{
     text-decoration: none;
     border: none;
@@ -13,50 +23,62 @@ body{
     color: white;
     cursor: pointer;
 }
+
 .button:hover{
     background-color: #3f89eb;
 }
 
+
+
 /* 
  * Navigation
  */
+
 nav{
     background-color: #e9ecf5;
 }
+
 nav ul{
     list-style-type: none;
     padding: 10px;
+
     display: flex;
     flex-direction: column;
     justify-content: start;
     align-items: stretch;
     align-content: flex-start;
 }
+
 nav ul li{
     display: block;
-    border-radius: 10px;
     padding: 15px 10px;
     font-weight: bold;
 }
+
 nav ul li.sub-menu{
-    border: none;
     margin-left: 25px;
     font-size: 0.9rem;
     padding: 10px 5px;
     font-weight: normal;
     background-color: initial;
 }
+
 nav a{
     display: inline-block;
     text-decoration: none;
     color: black;
 }
+
 nav a:hover{
-    color: #4e4e4e;
+    color: #727272;
 }
+
+/* nav icons */
 nav i.bi{
     font-size: 1.3rem;
 }
+
+
 
 /*
  * Styling of main.html
@@ -78,6 +100,12 @@ body{
 #content{
     padding: 10px 20px;
 }
+
+
+
+/*
+ * Floating button
+ */
 
 .floating{
     position: fixed;
@@ -102,6 +130,7 @@ body > .header{
     margin-top: 30px;
 }
 
+/* PC version */
 @media only screen and (min-width: 786px){
     body{
         grid-template-columns: 20vw auto 20vw;
@@ -124,10 +153,12 @@ body > .header{
         margin: 0;
     }
     .floating{
-        right: calc(20vw + 20px);
+        right: calc(20vw + 40px);
     }
 }
-.header{
+
+/* Assign grid areas to objects */
+body > .header{
     grid-area: header;
 }
 
@@ -143,13 +174,12 @@ nav{
     grid-area: nav;
 }
 
-a{
-    color: black;
-}
+
 
 /*
  * Header styling
  */
+
 body > .header{
     display: flex;
     flex-direction: row;
@@ -160,9 +190,12 @@ body > .header .title{
     font-size: 2em;
 }
 
+
+
 /*
  * Task list style
  */
+
 ul.task-list{
     list-style-type: none;
     margin: 0;
@@ -188,11 +221,13 @@ ul.task-list li a{
 }
 
 
+
 /*
  * Styling of each row
  * - complete icon first
  * - rest of the row is task
  */
+
 .task{
     display: flex;
     align-items: center;
@@ -224,9 +259,12 @@ ul.task-list li a{
     padding-bottom: 2px;
 }
 
+
+
 /*
  * Complete icon styling
  */
+
 .complete{
     margin-right: 15px;
 }
@@ -245,26 +283,31 @@ ul.task-list li a{
 .complete span.icon:hover{
     animation: iconCheckCircle 0.3s ease-in;
     animation-fill-mode: forwards;
-    /* background-image: url("../svg/check-circle.svg"); */
 }
+
 .complete span.icon.completed{
     background-image: url("../svg/check-circle.svg");
 }
+
 .complete span.icon.completed:hover{
     animation: iconCircle 0.3s ease-in;
     animation-fill-mode: forwards;
-    /* background-image: url("../svg/circle.svg"); */
 }
+
 @keyframes iconCircle {
     100% { background-image: url("../svg/circle.svg"); }
-  }
-@keyframes iconCheckCircle {
-100% { background-image: url("../svg/check-circle.svg"); }
 }
+
+@keyframes iconCheckCircle {
+    100% { background-image: url("../svg/check-circle.svg"); }
+}
+
+
 
 /*
  * Edit Icon
  */
+
 .task-edit span.icon{
     display: inline-block;
     background-image: url("../svg/edit.svg");
@@ -274,14 +317,18 @@ ul.task-list li a{
     width: 0.8em;
     height: 0.8em;
 }
+
 .task-edit{
     margin-left: 15px;
     vertical-align: middle;
 }
 
+
+
 /*
  * Delete Icon
  */
+
  .task-delete span.icon{
     display: inline-block;
     background-image: url("../svg/delete.svg");
@@ -291,10 +338,13 @@ ul.task-list li a{
     width: 0.8em;
     height: 0.8em;
 }
+
 .task-delete{
     margin-left: 15px;
     vertical-align: middle;
 }
+
+
 
 /*
  * Task detail
@@ -307,9 +357,12 @@ ul.task-list li a{
     font-weight: normal;
 }
 
+
+
 /*
  * Tags
  */
+
 .tag-color{
     display: inline-block;
     width: 1em;
@@ -318,6 +371,7 @@ ul.task-list li a{
     border: 1px solid black;
     margin-right: 3px;
 }
+
 .tag{
     display: inline-block;
     padding: 2px 5px;
@@ -331,9 +385,12 @@ ul.task-list li a{
     margin: 10px 0;
 }
 
+
+
 /*
  * Delete screen
  */
+
 .banner{
     position: absolute;
     width: 100%;
@@ -347,50 +404,58 @@ ul.task-list li a{
     justify-content: center;
     align-items: center;
 }
+
 .banner + *{
     font-size: 2.5em;
     font-weight: normal;
 }
+
 .banner form{
     display: inline-block;
 }
+
 .buttons .button{
-    text-decoration: none;
-    border: none;
     padding: 20px 30px;
     font-size: 2em;
-    border-radius: 10px;
     box-shadow: 5px 5px;
     margin: 20px;
-    cursor: pointer;
 }
+
 .buttons .button.back{
     background-color: #23a523;
     color: white;
 }
+
 .buttons .button.back:hover{
     background-color: #28bb28;
 }
+
 .buttons .button.delete{
     background-color: #a52323;
     color: white;
 }
+
 .buttons .button.delete:hover{
     background-color: #d42222;
 }
 
+
+
 /*
  * Tag list
  */
+
 .tag-list{
     list-style-type: none;
     margin: 0;
     padding: 0;
 }
+
 .tag-list .tag{
     border: none;
     font-size: 1.1em;
 }
+
 .tag-list li{
     display: block;
     margin: 10px 0;
@@ -402,6 +467,7 @@ ul.task-list li a{
 .tag-list a{
     text-decoration: none;
 }
+
 .tag-list i.bi{
     font-size: 1.2rem;
     margin: 0 5px;

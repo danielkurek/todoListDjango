@@ -3,17 +3,19 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('', views.index, name='index'),
+    #task URLs
+    path('', views.taskList, name='task-list'),
+    path('tasks', views.taskList, name='task-list'),
+    path('task/create', views.taskCreate, name='task-create'),
+    path('task/<int:task_id>/', views.taskDetail, name='task-detail'),
+    path('task/<int:task_id>/complete', views.taskComplete, name='task-complete'),
+    path('task/<int:task_id>/edit', views.taskEdit, name='task-edit'),
+    path('task/<int:task_id>/delete', views.taskDelete, name='task-delete'),
+    path('task/deleted', views.taskDeleted, name='task-deleted'),
     
-    path('task/add', views.input, name='task-add'),
-    path('task/<int:task_id>/', views.detail, name='task-detail'),
-    path('task/<int:task_id>/complete', views.complete, name='task-complete'),
-    path('task/<int:task_id>/edit', views.editTask, name='task-edit'),
-    path('task/<int:task_id>/delete', views.deleteTask, name='task-delete'),
-    path('task/deleted', views.deletedTask, name='task-deleted'),
-    
+    #tags URLs
     path('tags', views.tagList, name='tag-list'),
-    path('tag/add', views.addTag, name='tag-add'),
+    path('tag/create', views.createTag, name='tag-create'),
     path('tag/<int:tag_id>/edit', views.editTag, name='tag-edit'),
     path('tag/<int:tag_id>/delete', views.deleteTag, name='tag-delete'),
     path('tag/deleted', views.deletedTag, name='tag-deleted'),

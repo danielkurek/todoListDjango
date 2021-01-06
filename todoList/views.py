@@ -5,10 +5,15 @@ from django.core.paginator import Paginator
 from datetime import datetime, timedelta
 
 from .models import ToDoTask, Tag
-from .forms import TaskForm, CreateTagForm
+from .forms import TaskForm, TagForm
 
-# Create your views here.
-def index(request):
+
+def taskList(request):
+    """Render index page"""
+    
+    title = "Tasks" #title of page
+
+    #Get parameters from URL
     showCompleted = request.GET.get("showCompleted", "")
     if showCompleted == "true":
         showCompleted = True
@@ -18,23 +23,31 @@ def index(request):
     filterQuery = request.GET.get("q", "")
     filterTags = request.GET.getlist("tags")
     filterDate = request.GET.get("date", "")
-       
+    
+    #Get tasks from database
     tasks = ToDoTask.objects
-    title = ""
+    
+    #filter tasks with parameters from URL
     if filterDate != "":
         date = datetime.now()
         if filterDate == "today":
+            #show only tasks due today or tasks that are past their due date
             title = "Today"
             tasks = tasks.filter(due_date__lte=date.strftime("%Y-%m-%d"))
+
         if filterDate == "week":
+            #show only tasks whose due date is less than date in one week
             title = "This week"
             tasks = tasks.filter(
                 due_date__lte=(date+timedelta(weeks=1)).strftime("%Y-%m-%d"))
-    if showCompleted == False:
+    
+    if showCompleted == False:  #show only uncompleted tasks
         tasks = tasks.filter(completed=False)
-    if filterQuery != "":
+
+    if filterQuery != "":  #filter by task title
         tasks = tasks.filter(task_title__icontains=filterQuery)
-    if len(filterTags) > 0:
+    
+    if len(filterTags) > 0:  #show tasks with all tags that were selected
         for i in range(len(filterTags)):
             # remove non integer values
             try:
@@ -42,13 +55,18 @@ def index(request):
             except ValueError:
                 filterTags.remove(i)
                 continue
+            
             tasks = tasks.filter(tags__pk=filterTags[i])
+    #Sort tasks, show uncompleted tasks with oldest due date first
     tasks = tasks.order_by('completed','due_date')
     
+    #Create pages, each page has 15 items,
+    #if last page has 3 or less items, display them in previous page
     paginator = Paginator(tasks, 15, orphans=3)
     pageNumber = request.GET.get("page")
     page = paginator.get_page(pageNumber)
     
+    #Get all tags to enable user to filter by them
     tags = Tag.objects.order_by('tag_name')
 
     return render(request, 'todoList/taskList.html', 
@@ -62,22 +80,29 @@ def index(request):
         'selectedTags': filterTags,
       })
 
-def detail(request, task_id):
+def taskDetail(request, task_id):
+    """Render page with task details"""
     task = ToDoTask.objects.get(id=task_id)
     return render(request, 'todoList/taskDetail.html', {'task': task})
 
-def complete(request, task_id):
-    complete = True
-    if request.method == "GET":
-        complete = request.GET.get("complete", "")
-        if complete == "false":
-            complete = False
-        else:
-            complete = True
+def taskComplete(request, task_id):
+    """Complete or uncomplete task"""
+    
+    # get parameters from URL
+    complete = request.GET.get("complete", "")
+    if complete == "false":
+        complete = False
+    else:
+        complete = True
+    
+    # get task and (un)complete it
     task = ToDoTask.objects.get(id=task_id)
     task.completed = complete
     task.save()
+    
+    # create next recurring task
     if task.recurring != ToDoTask.Recurring.ONCE and task.created_next == False:
+        # determine next due date of recurring task
         newDate:datetime = task.due_date
         if task.recurring == ToDoTask.Recurring.DAILY:
             newDate += timedelta(days=1)
@@ -87,6 +112,8 @@ def complete(request, task_id):
             newDate += timedelta(weeks=4)
         elif task.recurring == ToDoTask.Recurring.YEARLY:
             newDate += timedelta(days=365)
+        
+        # create new task with same informations and new due date
         newTask = ToDoTask(
             task_title = task.task_title,
             due_date = newDate,
@@ -94,50 +121,71 @@ def complete(request, task_id):
             recurring = task.recurring
             )
         newTask.save()
-        for tag in task.tags.all():
-            newTask.tags.add(tag)
+
+        # add tags to new task
+        newTask.tags.set(list(task.tags.all()))
+
+        # save that next recurring task was created
+        # (to avoid duplicates)
         task.created_next = True
         task.save()
-    # return HttpResponse("Task completed" if complete else "Task uncompleted")
-    return redirect("index")
+    
+    return redirect("task-list")
 
-def input(request):
+def taskCreate(request):
+    """Render form to create task and process it"""
+    
     if request.method == "POST":
+        # process data and save it
         form = TaskForm(request.POST)
         if form.is_valid():
             task = form.save()
+
+            # add tags to task
             tagIDs = request.POST.getlist("tag", [])
             tags = []
             for tagID in tagIDs:
                 tag = Tag.objects.get(pk=tagID)
                 tags.append(tag)
             task.tags.set(tags)
-            return redirect("task-add")
+
+            return redirect("task-create")
     else:
+        # create form with initial date
         initalDate = datetime.now() + timedelta(days=1)
         form = TaskForm(
             initial={
                 "due_date": initalDate.strftime("%Y-%m-%dT%H:00")
             })
+    
+    # get tags to display them in form
     tags = Tag.objects.order_by("tag_name")
     return render(request, 'todoList/forms/taskForm.html', 
-        {'form':form, 'urlAction': reverse('task-add'), 'tags':tags})
+        {'form':form, 'urlAction': reverse('task-create'), 'tags':tags})
 
-def editTask(request, task_id):
+def taskEdit(request, task_id):
+    """Render form to edit task and process it"""
+    
+    # get task or show error message
     try:
         task = ToDoTask.objects.get(pk=task_id)
     except ToDoTask.DoesNotExist:
         return HttpResponse("Task not found.")
+    
+    # process data from form
     if request.method == "POST":
         form = TaskForm(request.POST, instance=task)
         if form.is_valid():
             task = form.save()
+            
+            # update tags
             tagIDs = request.POST.getlist("tag", [])
             tags = []
             for tagID in tagIDs:
                 tag = Tag.objects.get(pk=tagID)
                 tags.append(tag)
             task.tags.set(tags)
+
             return redirect("task-detail", task_id=task_id)
     else:
         form = TaskForm(instance=task, 
@@ -145,10 +193,15 @@ def editTask(request, task_id):
                 "due_date": task.due_date.strftime("%Y-%m-%dT%H:%M")
             }
         )
+    
+    # get tags to display them in form
     tags = Tag.objects.order_by("tag_name")
+    
+    # get tags that are assigned to task being editted
     task_tags = []
     for tag in task.tags.all():
         task_tags.append(tag.pk)
+    
     return render(request, 'todoList/forms/taskForm.html', 
         {
             'form': form, 
@@ -156,23 +209,34 @@ def editTask(request, task_id):
             'tags': tags,
             'taskTags': task_tags,
         })
-def deletedTask(request):
+
+def taskDeleted(request):
+    """Render message of task being deleted successfully"""
+
     return render(request, 'todoList/message.html', 
         {
             'message_text': 'Task has been deleted',
-            'url': reverse('index'),
+            'url': reverse('task-list'),
             'button_text': 'Return Home',
         })
-def deleteTask(request, task_id):
+def taskDelete(request, task_id):
+    """Render delete confirmation and process answer - deletion of task"""
+    
+    # get task or display error if it does not exist
     try:
         task = ToDoTask.objects.get(pk=task_id)
     except ToDoTask.DoesNotExist:
         return HttpResponse("Task not found.")
+    
+    # process answer on form
     if request.method == "POST":
+
+        # deletion of task
         if request.POST.get("delete", "false") == "true":
             task.delete()
             return redirect('task-deleted')
     
+    # render confirmation form
     return render(request, 'todoList/forms/delete.html', 
         {
             'item': task.task_title,
@@ -181,53 +245,72 @@ def deleteTask(request, task_id):
         })
     
 def tagList(request):
+    """Render list of all tags"""
+
     tags = Tag.objects.all()
     return render(request, 'todoList/tagList.html', {'tags':tags})
 
-def addTag(request):
+def createTag(request):
+    """Render form for creation of tag and process it"""
+
+    # process submitted form
     if request.method == "POST":
-        form = CreateTagForm(request.POST)
+        form = TagForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect("tag-add")
+            return redirect("tag-create")
     else:
-        form = CreateTagForm(
+        # create form with initial color
+        form = TagForm(
             initial={
                 "tag_color": "#FF0000"
             })
+    
     return render(request, 'todoList/forms/inputForm.html', 
         {
             'form':form,
-            'urlAction': reverse('tag-add'),
+            'urlAction': reverse('tag-create'),
             'titleText': 'Add Tag',
         })
 
 def editTag(request, tag_id):
+    """Render form for editing tag and process it"""
+
+    # get tag or diplay error if it does not exist
     try:
         tag = Tag.objects.get(pk=tag_id)
     except Tag.DoesNotExist:
         return HttpResponse("Tag not found.")
+    
+    # process submitted form
     if request.method == "POST":
-        print(tag.tag_name, tag.id, tag_id)
-        form = CreateTagForm(request.POST, instance=tag)
+        form = TagForm(request.POST, instance=tag)
         if form.is_valid():
             form.save()
             return redirect("tag-list")
     else:
-        form = CreateTagForm(instance=tag)
+        # create new form
+        form = TagForm(instance=tag)
+    
     return render(request, 'todoList/forms/inputForm.html', 
         {
-            'form':form,
+            'form': form,
             'urlAction': reverse('tag-edit', args=[tag_id]),
             'titleText': 'Edit Tag',
         })
 
 def deleteTag(request, tag_id):
+    """Render delete confirmation of tag and process answer - deletion of tag"""
+    
+    # get tag or display message if it does not exist
     try:
         tag = Tag.objects.get(pk=tag_id)
     except Tag.DoesNotExist:
         return HttpResponse("Task not found.")
+    
+    # process answer
     if request.method == "POST":
+        # delete tag
         if request.POST.get("delete", "false") == "true":
             tag.delete()
             return redirect('tag-deleted')
@@ -239,6 +322,8 @@ def deleteTag(request, tag_id):
             'delete_url': reverse('tag-delete', args=[tag_id])
         })
 def deletedTag(request):
+    """Render message after successfully deleting tag"""
+
     return render(request, 'todoList/message.html', 
         {
             'message_text': 'Tag has been deleted',

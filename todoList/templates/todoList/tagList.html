@@ -1,6 +1,6 @@
 {% extends 'todoList/main.html' %}
 {% block title %}Tags{% endblock title %}
-{% block floating-btn-url %}{% url 'tag-add' %}{% endblock floating-btn-url %}
+{% block floating-btn-url %}{% url 'tag-create' %}{% endblock floating-btn-url %}
 {% block content %}
     <ul class="tag-list list">
         {% for tag in tags %}

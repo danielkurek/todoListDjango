@@ -13,13 +13,15 @@ class ColorInput(TextInput):
     input_type = "color"
 
 class TaskForm(ModelForm):
+    """Form for creating and editing tasks"""
     class Meta:
         model = ToDoTask
         fields = ("task_title", "due_date","task_description", "recurring")
         widgets = {
             "due_date": DateTimeInput,
         }
-class CreateTagForm(ModelForm):
+class TagForm(ModelForm):
+    """Form for creating and editing tags"""
     class Meta:
         model = Tag
         fields = ("tag_name", "tag_color")

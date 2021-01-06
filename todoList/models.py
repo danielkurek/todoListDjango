@@ -2,9 +2,8 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
 
-# Create your models here.
-
 class Tag(models.Model):
+    
     tag_name = models.CharField(max_length=50)
     tag_color = models.CharField(max_length=7) # color #RRGGBB
 
