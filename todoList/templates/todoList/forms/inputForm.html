@@ -1,10 +1,5 @@
 {% extends 'todoList/main.html' %}
 {% block title %}Add Task{% endblock title %}
-{% block menu %}
-<ul>
-    <li><a href="{% url 'index' %}">Home</a></li>
-</ul>
-{% endblock menu %}
 {% block content %}
 <div class="content">
     <form action="{{urlAction}}" method="post">

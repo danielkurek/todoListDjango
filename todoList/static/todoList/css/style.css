@@ -1,3 +1,6 @@
+body{
+    font-family: 'Roboto', sans-serif;
+}
 .bold{
     font-weight: bold;
 }
@@ -17,38 +20,53 @@
 /* 
  * Navigation
  */
-nav{
-    margin: 5px;
-    padding: 10px;
-}
 nav ul{
     list-style-type: none;
-    padding: 0;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: flex-start;
 }
 nav ul li{
     display: block;
-    margin: 5px 0px;
+    width: 100%;
+    /* border-bottom: 1px solid #a1a1a1;
+    border-top: 1px solid #a1a1a1; */
+    border-radius: 10px;
+    background-color: #c4dffd;
+    padding: 15px 10px;
+    font-weight: bold;
+}
+nav ul li.sub-menu{
+    border: none;
+    margin-left: 25px;
+    font-size: 0.9rem;
+    padding: 10px 5px;
+    width: calc(100% - 20px);
+    font-weight: normal;
+    background-color: #fff;
 }
 nav a{
+    display: inline-block;
+    width: 100%;
     text-decoration: none;
-    color: white;
-    background-color: #005dd6;
-    border-radius: 10px;
-    padding: 10px 20px;
+    color: black;
 }
 nav a:hover{
-    background-color: #3f89eb;
+    color: #4e4e4e;
+}
+nav i.bi{
+    font-size: 1.3rem;
 }
 
 /*
  * Styling of main.html
  */
-h1{
-    font-weight: normal;
-    display: none;
-}
 
 body{
+    margin: 0;
+    padding: 0;
     display: grid;
     grid-template-columns: auto;
     grid-template-rows: auto;
@@ -59,19 +77,37 @@ body{
         "footer";
 }
 
-nav a{
-    display: block;
+#content{
+    padding: 10px 20px;
+}
+
+.floating{
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #005dd6;
+    color: white;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    box-shadow: 2px 2px 3px #999;
     text-align: center;
+    text-decoration: none;
+}
+.floating span{
+    line-height: 50px;
+    margin-top: 22px;
+    font-size: 30px;
 }
 
 @media only screen and (min-width: 786px){
     body{
-        grid-template-columns: 20% auto 20%;
+        grid-template-columns: 20vw auto 20vw;
         grid-template-rows: auto;
         grid-template-areas: 
-            "nav header ."
-            "nav content ."
-            "nav footer .";
+            ". header ."
+            ". content ."
+            ". footer .";
     }
 
     nav a{
@@ -79,15 +115,21 @@ nav a{
         text-align: left;
     }
 
-    nav ul li{
-        margin: 25px 0px;
+    nav{
+        position: fixed;
+        width: 20vw;
+        height: 100vh;
+        margin: 0;
+    }
+    .floating{
+        right: calc(20vw + 20px);
     }
 }
 .header{
     grid-area: header;
 }
 
-.content{
+#content{
     grid-area: content;
 }
 
@@ -103,8 +145,17 @@ a{
     color: black;
 }
 
-#content{
-    margin-top: 20px;
+/*
+ * Header styling
+ */
+body > .header{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+body > .header .title{
+    font-size: 2em;
 }
 
 /*
@@ -120,24 +171,18 @@ ul.task-list{
 /* Task list rows */
 ul.task-list li{
     overflow: visible;
-    border-top-width: 1px;
-    border-top-style: solid;
-    border-color: #bebebe;
-    padding: 10px 5px;
-}
-ul.task-list li.completed{
-    border-color: #505050;
-}
-ul.task-list li:last-child{
-    border-bottom-width: 1px;
-    border-bottom-style: solid;
+    padding: 5px 10px;
+    border-radius: 10px;
+    margin: 3px 0px;
+    background-color: #e9ebf3;
 }
 ul.task-list li a{
     text-decoration: none;
     vertical-align: middle;
 }
 .task.completed{
-    background-color: #cfcfcf;
+    background-color: #dddddd;
+    text-decoration: line-through;
 }
 
 
@@ -151,18 +196,30 @@ ul.task-list li a{
     align-items: center;
 }
 
+.task.due{
+    background-color: #f5e4e4;
+}
+
 .task-link{
     width: 100%;
 }
 
 .task .task-title{
-    font-size: 1.1em;
+    font-size: 1.2em;
 }
 
 .task .due-date{
     display: block;
     font-size: 0.8em;
-    margin-top: 5px;
+    margin-bottom: 3px;
+}
+
+.due{
+    color: #cc0000;
+    font-weight: bold;
+}
+.task .due-date i{
+    padding-bottom: 2px;
 }
 
 /*
@@ -259,11 +316,11 @@ ul.task-list li a{
     margin-right: 3px;
 }
 .tag{
-    padding: 0.2em 0.5em;
+    display: inline-block;
+    padding: 2px 5px;
     border-radius: 10px;
     border: 1px solid black;
-
-    margin: 0 5px;
+    margin: 1px 2px;
     font-size: 0.9em;
 }
 

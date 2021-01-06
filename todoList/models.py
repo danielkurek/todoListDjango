@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from django.utils import timezone
 
 # Create your models here.
 
@@ -33,3 +34,7 @@ class ToDoTask(models.Model):
 
     def __str__(self):
         return self.task_title
+    
+    @property
+    def is_past_due(self):
+        return self.due_date < timezone.now()

@@ -17,8 +17,19 @@ def index(request):
     
     filterQuery = request.GET.get("q", "")
     filterTags = request.GET.getlist("tags")
+    filterDate = request.GET.get("date", "")
        
     tasks = ToDoTask.objects
+    title = ""
+    if filterDate != "":
+        date = datetime.now()
+        if filterDate == "today":
+            title = "Today"
+            tasks = tasks.filter(due_date__lte=date.strftime("%Y-%m-%d"))
+        if filterDate == "week":
+            title = "This week"
+            tasks = tasks.filter(
+                due_date__lte=(date+timedelta(weeks=1)).strftime("%Y-%m-%d"))
     if showCompleted == False:
         tasks = tasks.filter(completed=False)
     if filterQuery != "":
@@ -32,7 +43,7 @@ def index(request):
                 filterTags.remove(i)
                 continue
             tasks = tasks.filter(tags__pk=filterTags[i])
-    tasks = tasks.order_by('completed','-create_date')
+    tasks = tasks.order_by('completed','due_date')
     
     paginator = Paginator(tasks, 15, orphans=3)
     pageNumber = request.GET.get("page")
@@ -42,6 +53,7 @@ def index(request):
 
     return render(request, 'todoList/taskList.html', 
       {
+        'titleText': title,
         'showCompleted': showCompleted,
         'showCompletedParam': "&showCompleted=true" if showCompleted else "",
         'queryParam': "&q=" + filterQuery if filterQuery != "" else "",

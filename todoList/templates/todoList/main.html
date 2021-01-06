@@ -8,18 +8,30 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="{% static 'todoList/css/style.css' %}">
+        <link rel="stylesheet" href="{% static 'todoList/icons/bootstrap-icons.css' %}">
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet">
     </head>
     <body>
-    <h1>{% block title %}ToDo List{% endblock title %}</h1>
     <nav>
     {% block menu %}
         <ul>
-            <li><a href="{% url 'add-task' %}">Add</a></li>
-            <li><a href="{% url 'add-tag' %}">Add tag</a></li>
+            <li><a href="{% url 'index' %}"><i class="bi bi-list-task"></i> Tasks</a></li>
+            <li class="sub-menu"><a href="{% url 'index' %}?date=today">Today</a></li>
+            <li class="sub-menu"><a href="{% url 'index' %}?date=week">This week</a></li>
+            <li><a href="{% url 'add-tag' %}"><i class="bi bi-tags"></i> Tags</a></li>
         </ul>
     {% endblock menu %}
     </nav>
-    <div id="content">
+    {% block floating-button %}
+        <a class="floating add" 
+            href="{% block floating-btn-url %}{% url 'add-tag' %}{% endblock floating-btn-url %}"
+            ><span>+</span></a>
+    {% endblock floating-button %}
+    <div class="header">
+        <span class="title">{% block title %}Tasks{% endblock title %}</span>
+    </div>
+    <div id="content" class="content">
         {% block content %}
         {% endblock content %}
     </div>
