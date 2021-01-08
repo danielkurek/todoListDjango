@@ -22,7 +22,7 @@
     <a href="?{{showCompletedParam|cut:"&"}}">Clear filter</a>
 </div>
 
-<ul class="task-list content">
+<ul class="task-list list content">
     {% for task in page %}
     <li class="task {%if task.completed %}completed{%endif%} {% if task.is_past_due %}due{% endif %}">
         {% spaceless %}

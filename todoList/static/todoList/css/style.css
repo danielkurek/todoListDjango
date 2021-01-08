@@ -10,6 +10,10 @@ a{
     color: black;
 }
 
+a:hover{
+    color: #666;
+}
+
 .bold{
     font-weight: bold;
 }
@@ -26,6 +30,22 @@ a{
 
 .button:hover{
     background-color: #3f89eb;
+}
+
+.list{
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+.list li{
+    display: block;
+    margin: 10px 0;
+    padding: 10px 10px;
+    border-radius: 10px;
+    background-color: #e2eef3;
+}
+.list a{
+    text-decoration: none;
 }
 
 
@@ -197,10 +217,7 @@ body > .header .title{
  */
 
 ul.task-list{
-    list-style-type: none;
-    margin: 0;
     margin-top: 10px;
-    padding: 0;
 }
 
 /* Task list rows */
@@ -211,10 +228,11 @@ ul.task-list li{
     margin: 3px 0px;
     background-color: #e9ebf3;
 }
+
 ul.task-list li a{
-    text-decoration: none;
     vertical-align: middle;
 }
+
 .task.completed{
     background-color: #dddddd;
     text-decoration: line-through;
@@ -229,7 +247,7 @@ ul.task-list li a{
  */
 
 .task{
-    display: flex;
+    display: flex !important;
     align-items: center;
 }
 
@@ -379,6 +397,7 @@ ul.task-list li a{
     border: 1px solid black;
     margin: 1px 2px;
     font-size: 0.9em;
+    color:black;
 }
 
 .tags{
@@ -445,22 +464,12 @@ ul.task-list li a{
  * Tag list
  */
 
-.tag-list{
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-}
-
 .tag-list .tag{
     border: none;
     font-size: 1.1em;
 }
 
 .tag-list li{
-    display: block;
-    margin: 10px 0;
-    padding: 10px 10px;
-    border-radius: 10px;
     background-color: #e2eef3;
 }
 
