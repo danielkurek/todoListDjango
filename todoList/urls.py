@@ -3,6 +3,14 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+    #list URLs
+    path('lists', views.listManage, name='list-manage'),
+    path('list/create', views.listCreate, name='list-create'),
+    path('list/<int:list_id>/', views.listView, name='list-view'),
+    path('list/<int:list_id>/edit', views.listEdit, name='list-edit'),
+    path('list/<int:list_id>/delete', views.listDelete, name='list-delete'),
+    path('list/deleted', views.listDeleted, name='list-deleted'),
+
     #task URLs
     path('', views.taskList, name='task-list'),
     path('tasks', views.taskList, name='task-list'),

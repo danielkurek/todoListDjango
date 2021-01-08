@@ -4,11 +4,11 @@ from django.http import HttpResponse
 from django.core.paginator import Paginator
 from datetime import datetime, timedelta
 
-from .models import ToDoTask, Tag
-from .forms import TaskForm, TagForm
+from .models import TaskList, ToDoTask, Tag
+from .forms import ListForm, TaskForm, TagForm
 
 
-def taskList(request):
+def taskList(request, list_id=None):
     """Render index page"""
     
     title = "Tasks" #title of page
@@ -26,6 +26,14 @@ def taskList(request):
     
     #Get tasks from database
     tasks = ToDoTask.objects
+
+    if list_id != None:
+        try:
+            taskList = TaskList.objects.get(pk=list_id)
+        except TaskList.DoesNotExist:
+            return HttpResponse("Task list not found")
+        tasks = tasks.filter(task_list_id=list_id)
+        title = taskList.list_name
     
     #filter tasks with parameters from URL
     if filterDate != "":
@@ -69,6 +77,9 @@ def taskList(request):
     #Get all tags to enable user to filter by them
     tags = Tag.objects.order_by('tag_name')
 
+    #Get first 5 task lists to show them in sidebar
+    # taskLists = TaskList.objects.all().order_by('list_name')[:5]
+
     return render(request, 'todoList/taskList.html', 
       {
         'titleText': title,
@@ -78,6 +89,7 @@ def taskList(request):
         'page': page,
         'tags': tags,
         'selectedTags': filterTags,
+        # 'taskLists': taskLists,
       })
 
 def taskDetail(request, task_id):
@@ -160,8 +172,13 @@ def taskCreate(request):
     
     # get tags to display them in form
     tags = Tag.objects.order_by("tag_name")
+
     return render(request, 'todoList/forms/taskForm.html', 
-        {'form':form, 'urlAction': reverse('task-create'), 'tags':tags})
+        {
+            'form':form, 
+            'urlAction': reverse('task-create'), 
+            'tags':tags,
+        })
 
 def taskEdit(request, task_id):
     """Render form to edit task and process it"""
@@ -321,6 +338,7 @@ def deleteTag(request, tag_id):
             'keep_url': reverse('tag-list'),
             'delete_url': reverse('tag-delete', args=[tag_id])
         })
+
 def deletedTag(request):
     """Render message after successfully deleting tag"""
 
@@ -328,5 +346,91 @@ def deletedTag(request):
         {
             'message_text': 'Tag has been deleted',
             'url': reverse('tag-list'),
+            'button_text': 'Return Home',
+        })
+
+def listManage(request):
+    taskLists = TaskList.objects.all()
+
+    return render(request, 'todoList/listManage.html',{'taskLists': taskLists})
+
+def listCreate(request):
+    """Render form for creation of list and process it"""
+    
+    # process submitted form
+    if request.method == "POST":
+        form = ListForm(request.POST)
+        if form.is_valid():
+            newList = form.save()
+            return redirect("list-view", list_id=newList.id)
+    else:
+        form = ListForm()
+    
+    return render(request, 'todoList/forms/inputForm.html', 
+        {
+            'form': form,
+            'urlAction': reverse('list-create'),
+            'titleText': 'Create List',
+        })
+
+def listView(request, list_id):
+    return taskList(request, list_id)
+
+def listEdit(request, list_id):
+    """Render form for creation of list and process it"""
+
+    # get list or display message if it does not exist
+    try:
+        taskList = TaskList.objects.get(pk=list_id)
+    except Tag.DoesNotExist:
+        return HttpResponse("List not found.")
+    
+    # process submitted form
+    if request.method == "POST":
+        form = ListForm(request.POST, instance=taskList)
+        if form.is_valid():
+            form.save()
+            return redirect("list-view", list_id=list_id)
+    else:
+        form = ListForm(instance=taskList)
+    
+    return render(request, 'todoList/forms/inputForm.html', 
+        {
+            'form': form,
+            'urlAction': reverse('list-edit'),
+            'titleText': f'Edit {taskList.list_name}',
+        })
+
+def listDelete(request, list_id):
+    """Render delete confirmation of list and process it
+     (delete list and all of its tasks)"""
+    
+    # get list or display message if it does not exist
+    try:
+        taskList = TaskList.objects.get(pk=list_id)
+    except Tag.DoesNotExist:
+        return HttpResponse("List not found.")
+    
+    # process answer
+    if request.method == "POST":
+        # delete tag
+        if request.POST.get("delete", "false") == "true":
+            taskList.delete()
+            return redirect('list-deleted')
+    
+    return render(request, 'todoList/forms/delete.html', 
+        {
+            'item': taskList.tag_name,
+            'keep_url': reverse('list-view', args=[list_id]),
+            'delete_url': reverse('list-delete', args=[list_id])
+        })
+
+def listDeleted(request):
+    """Render message after successfully deleting tag"""
+
+    return render(request, 'todoList/message.html', 
+        {
+            'message_text': 'List has been deleted',
+            'url': reverse('task-list'),
             'button_text': 'Return Home',
         })

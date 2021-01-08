@@ -9,6 +9,13 @@ class Tag(models.Model):
 
     def __str__(self):
         return f"{self.tag_name} - {self.tag_color}"
+
+class TaskList(models.Model):
+    list_name = models.CharField(max_length=255)
+    create_date = models.DateTimeField('date created', auto_now_add=True)
+    
+    def __str__(self):
+        return self.list_name
 class ToDoTask(models.Model):
 
     class Recurring(models.TextChoices):
@@ -30,6 +37,8 @@ class ToDoTask(models.Model):
         default=Recurring.ONCE,
     )
     created_next = models.BooleanField(default=False)
+
+    task_list = models.ForeignKey(TaskList, null=True, blank=True, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.task_title

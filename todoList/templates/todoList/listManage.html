@@ -1,0 +1,21 @@
+{% extends 'todoList/main.html' %}
+{% block title %}Lists{% endblock title %}
+{% block floating-btn-url %}{% url 'list-create' %}{% endblock floating-btn-url %}
+{% block content %}
+    {% if taskLists|length_is:"0" %}
+    (No lists found)
+    {% endif %}
+    <ul class="list-manage list">
+        {% for taskList in taskLists %}
+            <li>
+                <a href="{% url 'list-view' taskList.id %}"><span class="list-name">{{taskList.list_name}}</span>
+                <a class="list-edit icon-button" href="{% url 'list-edit' taskList.id %}">
+                    <i class="bi bi-pencil"></i>
+                </a>
+                <a class="list-delete icon-button" href="{% url 'list-delete' taskList.id %}">
+                    <i class="bi bi-trash"></i>
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock content %}

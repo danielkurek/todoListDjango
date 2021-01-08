@@ -3,7 +3,7 @@ from django.forms import ModelForm,DateInput
 from django.forms import widgets
 from django.forms.widgets import DateTimeInput, TextInput
 
-from .models import ToDoTask
+from .models import TaskList, ToDoTask
 from .models import Tag
 
 class DateTimeInput(DateTimeInput):
@@ -16,7 +16,7 @@ class TaskForm(ModelForm):
     """Form for creating and editing tasks"""
     class Meta:
         model = ToDoTask
-        fields = ("task_title", "due_date","task_description", "recurring")
+        fields = ("task_title", "due_date","task_description", "recurring","task_list")
         widgets = {
             "due_date": DateTimeInput,
         }
@@ -28,4 +28,9 @@ class TagForm(ModelForm):
         widgets = {
             "tag_color": ColorInput
         }
+
+class ListForm(ModelForm):
+    class Meta:
+        model = TaskList
+        fields = ("list_name",)
         
