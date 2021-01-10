@@ -4,7 +4,7 @@ ToDo list app in Django
 - [x] Filter tasks
 - [x] Repeating tasks
 - [ ] Remainder
-- [ ] Multiple lists
+- [x] Multiple lists
 - [ ] Multiple users
 - [ ] Sharing lists
 - [ ] JS frontend
@@ -15,9 +15,9 @@ ToDo list app in Django
     git clone https://github.com/danielkurek/todoListSite
     cd todoListSite
 ```
-2) Install Django
+2) Install required packages
 
-    `pip install django`
+    `python -m pip install -r requirements.txt`
 3) Initialize database
 
     `python manage.py migrate`
@@ -29,16 +29,16 @@ ToDo list app in Django
 
 If you want to use admin console, you have to setup superuser:
 
-    `python manage.py createsuperuser`
+    python manage.py createsuperuser
 Enter your desired username and press enter.
 
-    `Username: admin`
+    Username: admin
 Then enter your desired email address:
 
-    `Email address: admin@example.com`
+    Email address: admin@example.com
 Then you will be prompted to enter your desired password:
 ```
-    Password: ********
-    Password (again): ********
-    Superuser created successfully.
+Password: ********
+Password (again): ********
+Superuser created successfully.
 ``` 
