@@ -1,5 +1,6 @@
 {% extends 'todoList/main.html' %}
 {% block title %}{% if titleText|length_is:"0" %}Add Task{% else %}{{titleText}}{% endif %}{% endblock title %}
+{% block floating-button %}{% endblock floating-button %}
 {% block content %}
 <div class="content">
     <form action="{{urlAction}}" method="post">
