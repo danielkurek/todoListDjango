@@ -12,8 +12,8 @@ ToDo list app in Django
 ## Instalation
 1) Clone this repository and go to repository folder
 ```
-    git clone https://github.com/danielkurek/todoListSite
-    cd todoListSite
+    git clone https://github.com/danielkurek/todoListDjango
+    cd todoListDjango
 ```
 2) Install required packages
 
