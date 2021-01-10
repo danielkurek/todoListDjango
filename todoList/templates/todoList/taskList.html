@@ -1,5 +1,6 @@
 {% extends 'todoList/main.html' %}
 {% block title %}{% if titleText|length_is:"0"%}Tasks{% else %}{{titleText}}{% endif%}{% endblock title %}
+{% block floating-btn-url %}{% url 'task-create' %}{% if taskListID %}?list={{taskListID}}{% endif %}{% endblock floating-btn-url %}
 {% block content %}
 <div class="header">
     <a href="?showCompleted={% if showCompleted %}false{% else %}true{% endif %}{{queryParam}}">{% if showCompleted == False %}Show Completed{% else %}Hide Completed{% endif %}</a>
@@ -23,6 +24,7 @@
 </div>
 
 <ul class="task-list list content">
+    {% if page|length_is:"0" %}(Empty){% endif %}
     {% for task in page %}
     <li class="task {%if task.completed %}completed{%endif%} {% if task.is_past_due %}due{% endif %}">
         {% spaceless %}

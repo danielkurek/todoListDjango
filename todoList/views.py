@@ -7,64 +7,91 @@ from datetime import datetime, timedelta
 from .models import TaskList, ToDoTask, Tag
 from .forms import ListForm, TaskForm, TagForm
 
+def filterTasks(tasks, filters:dict):
+    """
+    Filter tasks from parameters (
+     `list_id`,
+     `date`,
+     `completed`,
+     `query`,
+     `tags`)
+    """
 
-def taskList(request, list_id=None):
+    # filter by lists
+    if "list_id" in filters and \
+        filters["list_id"] != None:
+        tasks = tasks.filter(task_list_id=filters["list_id"])
+    
+    # filter by date
+    if "date" in filters:
+        date = datetime.now()
+        if filters["date"] == "today":
+            #show only tasks due today or tasks that are past their due date
+            tasks = tasks.filter(due_date__lte=date.strftime("%Y-%m-%d"))
+
+        if filters["date"] == "week":
+            #show only tasks whose due date is less than date in one week
+            tasks = tasks.filter(
+                due_date__lte=(date+timedelta(weeks=1)).strftime("%Y-%m-%d"))
+    
+    # Show/hide completed tasks
+    if "completed" in filters and \
+        filters["completed"] == False:  
+        tasks = tasks.filter(completed=False)
+
+    # Filter by task title
+    if "query" in filters["query"] and \
+        filters["query"] != "":
+        tasks = tasks.filter(task_title__icontains=filters["query"])
+    
+    # Filter tasks by selected tags
+    if "tags" in filters and \
+        len(filters["tags"]) > 0: 
+        for i in range(len(filters["tags"])):
+            # remove non integer values
+            try:
+                filters["tags"][i] = int(filters["tags"][i])
+            except ValueError:
+                filters["tags"].remove(i)
+                continue
+            
+            tasks = tasks.filter(tags__pk=filters["tags"][i])
+    
+    return tasks
+
+def taskList(request, list_id = None):
     """Render index page"""
-    
-    title = "Tasks" #title of page
 
-    #Get parameters from URL
-    showCompleted = request.GET.get("showCompleted", "")
-    if showCompleted == "true":
-        showCompleted = True
-    else:
-        showCompleted = False
+    #Get filter parameters from URL
+    filters = {
+        "query": request.GET.get("q", "").strip(),
+        "tags": request.GET.getlist("tags"),
+        "date": request.GET.get("date", ""),
+        "completed": request.GET.get("showCompleted", "") == "true",
+        "list_id": list_id,
+    }
     
-    filterQuery = request.GET.get("q", "")
-    filterTags = request.GET.getlist("tags")
-    filterDate = request.GET.get("date", "")
+    # Title of page
+    title = "Tasks"
+
+    if list_id != None:
+        try:
+            taskList = TaskList.objects.get(pk=filters["list_id"])
+        except TaskList.DoesNotExist:
+            print("List not found")
+            filters["list_id"] = None
+        else:
+            title = taskList.list_name
+    elif filters["date"] == "today":
+        title = "Today"
+    elif filters["date"] == "week":
+        title = "This week"
     
     #Get tasks from database
     tasks = ToDoTask.objects
 
-    if list_id != None:
-        try:
-            taskList = TaskList.objects.get(pk=list_id)
-        except TaskList.DoesNotExist:
-            return HttpResponse("Task list not found")
-        tasks = tasks.filter(task_list_id=list_id)
-        title = taskList.list_name
+    tasks = filterTasks(tasks, filters)
     
-    #filter tasks with parameters from URL
-    if filterDate != "":
-        date = datetime.now()
-        if filterDate == "today":
-            #show only tasks due today or tasks that are past their due date
-            title = "Today"
-            tasks = tasks.filter(due_date__lte=date.strftime("%Y-%m-%d"))
-
-        if filterDate == "week":
-            #show only tasks whose due date is less than date in one week
-            title = "This week"
-            tasks = tasks.filter(
-                due_date__lte=(date+timedelta(weeks=1)).strftime("%Y-%m-%d"))
-    
-    if showCompleted == False:  #show only uncompleted tasks
-        tasks = tasks.filter(completed=False)
-
-    if filterQuery != "":  #filter by task title
-        tasks = tasks.filter(task_title__icontains=filterQuery)
-    
-    if len(filterTags) > 0:  #show tasks with all tags that were selected
-        for i in range(len(filterTags)):
-            # remove non integer values
-            try:
-                filterTags[i] = int(filterTags[i])
-            except ValueError:
-                filterTags.remove(i)
-                continue
-            
-            tasks = tasks.filter(tags__pk=filterTags[i])
     #Sort tasks, show uncompleted tasks with oldest due date first
     tasks = tasks.order_by('completed','due_date')
     
@@ -83,13 +110,13 @@ def taskList(request, list_id=None):
     return render(request, 'todoList/taskList.html', 
       {
         'titleText': title,
-        'showCompleted': showCompleted,
-        'showCompletedParam': "&showCompleted=true" if showCompleted else "",
-        'queryParam': "&q=" + filterQuery if filterQuery != "" else "",
+        'showCompleted': filters["completed"],
+        'showCompletedParam': "&showCompleted=true" if filters["completed"] else "",
+        'queryParam': "&q=" + filters["query"] if filters["query"] != "" else "",
         'page': page,
         'tags': tags,
-        'selectedTags': filterTags,
-        # 'taskLists': taskLists,
+        'selectedTags': filters["tags"],
+        'taskListID': filters["list_id"],
       })
 
 def taskDetail(request, task_id):
@@ -165,10 +192,22 @@ def taskCreate(request):
     else:
         # create form with initial date
         initalDate = datetime.now() + timedelta(days=1)
-        form = TaskForm(
-            initial={
+        initial ={
                 "due_date": initalDate.strftime("%Y-%m-%dT%H:00")
-            })
+        }
+        listID = request.GET.get("list", "")
+        if listID != "":
+            try:
+                listID = int(listID)
+                taskList = TaskList.objects.get(pk=listID)
+            except ValueError:
+                print("TaskCreate: list id not valid")
+            except TaskList.DoesNotExist:
+                print("TaskCreate: list not found")
+            else:
+                initial["task_list"] = taskList
+        form = TaskForm(
+            initial=initial)
     
     # get tags to display them in form
     tags = Tag.objects.order_by("tag_name")
@@ -350,6 +389,7 @@ def deletedTag(request):
         })
 
 def listManage(request):
+    """Render list of all lists where you can edit or delete lists"""
     taskLists = TaskList.objects.all()
 
     return render(request, 'todoList/listManage.html',{'taskLists': taskLists})
@@ -377,7 +417,7 @@ def listView(request, list_id):
     return taskList(request, list_id)
 
 def listEdit(request, list_id):
-    """Render form for creation of list and process it"""
+    """Render form for editting list and process it"""
 
     # get list or display message if it does not exist
     try:
@@ -397,7 +437,7 @@ def listEdit(request, list_id):
     return render(request, 'todoList/forms/inputForm.html', 
         {
             'form': form,
-            'urlAction': reverse('list-edit'),
+            'urlAction': reverse('list-edit', args=[list_id]),
             'titleText': f'Edit {taskList.list_name}',
         })
 
@@ -408,25 +448,25 @@ def listDelete(request, list_id):
     # get list or display message if it does not exist
     try:
         taskList = TaskList.objects.get(pk=list_id)
-    except Tag.DoesNotExist:
+    except TaskList.DoesNotExist:
         return HttpResponse("List not found.")
     
     # process answer
     if request.method == "POST":
-        # delete tag
+        # delete list
         if request.POST.get("delete", "false") == "true":
             taskList.delete()
             return redirect('list-deleted')
     
     return render(request, 'todoList/forms/delete.html', 
         {
-            'item': taskList.tag_name,
+            'item': taskList.list_name,
             'keep_url': reverse('list-view', args=[list_id]),
             'delete_url': reverse('list-delete', args=[list_id])
         })
 
 def listDeleted(request):
-    """Render message after successfully deleting tag"""
+    """Render message after successfully deleting list"""
 
     return render(request, 'todoList/message.html', 
         {
